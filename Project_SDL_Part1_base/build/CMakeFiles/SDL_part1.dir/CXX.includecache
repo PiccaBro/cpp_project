@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/jw-pc/Desktop/EPITA/S7/c++_avance/cpp_project/Project_SDL_Part1_base/Project_SDL1.cpp
+/home/celia/Documents/Epita/S7/C++/cpp_project/Project_SDL_Part1_base/Project_SDL1.cpp
 Project_SDL1.h
-/home/jw-pc/Desktop/EPITA/S7/c++_avance/cpp_project/Project_SDL_Part1_base/Project_SDL1.h
+/home/celia/Documents/Epita/S7/C++/cpp_project/Project_SDL_Part1_base/Project_SDL1.h
 algorithm
 -
 cassert
@@ -22,7 +22,7 @@ random
 string
 -
 
-/home/jw-pc/Desktop/EPITA/S7/c++_avance/cpp_project/Project_SDL_Part1_base/Project_SDL1.h
+/home/celia/Documents/Epita/S7/C++/cpp_project/Project_SDL_Part1_base/Project_SDL1.h
 SDL.h
 -
 SDL_image.h
@@ -42,6 +42,14 @@ optional
 vector
 -
 math.h
+-
+
+/home/celia/Documents/Epita/S7/C++/cpp_project/Project_SDL_Part1_base/main.cpp
+Project_SDL1.h
+/home/celia/Documents/Epita/S7/C++/cpp_project/Project_SDL_Part1_base/Project_SDL1.h
+stdio.h
+-
+string
 -
 
 /usr/include/SDL2/SDL.h
