@@ -43,8 +43,11 @@ namespace {
 
     return optimized_surface;
   } // namespace
-}
 
+  unsigned distance(unsigned x1, unsigned y1, unsigned x2, unsigned y2) {
+    return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+  }
+}
 
 // ----------------------------- APPLICATION ---------------------------------
 
@@ -53,6 +56,8 @@ application::application(unsigned n_sheep, unsigned n_wolf){
   // create the application window
   const char *title = "The Happy Farm";
   window_ptr_ = SDL_CreateWindow(title, 0, 0, frame_width, frame_height, 0);
+  this->n_sheep = n_sheep;
+  this->n_wolf = n_wolf;
 }
 
 application::~application(){
@@ -76,7 +81,16 @@ int application::loop(unsigned period){
     printf("Create Surface failed\n");
   }
   ground the_ground = ground(window_surface_ptr_);
-  the_ground.add_animal();
+  while (n_sheep > 0 || n_wolf > 0) {
+    if (n_sheep > 0) {
+      the_ground.add_animal("sheep");
+      n_sheep--;
+    }
+    if (n_wolf > 0) {
+      the_ground.add_animal("wolf");
+      n_wolf--;
+    }
+  }
 
   // loop
   while (!quit) {
@@ -86,7 +100,7 @@ int application::loop(unsigned period){
       SDL_Delay(frame_time);
       lastTime = currentTime;
     }
-    if(currentTime > period){
+    if(currentTime > period || the_ground.get_sheeps().size()==0){
       quit = 1;
     }
   }
@@ -109,8 +123,21 @@ ground::~ground(){
 
 }
 
-void ground::add_animal(){
-  sh = new sheep("../../media/sheep.png",window_surface_ptr_);
+void ground::set_sheeps(std::vector<sheep *> sheeps){
+  this->sheeps = sheeps;
+}
+
+std::vector<sheep *> ground::get_sheeps() {
+  return sheeps;
+}
+
+void ground::add_animal(std::string name){
+  if (name == "sheep")
+    sheeps.push_back(new sheep("../../media/sheep.png",window_surface_ptr_));
+  else if (name == "wolf")
+    wolves.push_back(new wolf("../../media/wolf.png", window_surface_ptr_));
+  else
+    printf("Error: unknow name '%s' !", name.c_str());
 }
 
 void ground::update(SDL_Window *window_ptr){
@@ -118,49 +145,71 @@ void ground::update(SDL_Window *window_ptr){
   if(SDL_FillRect(window_surface_ptr_, NULL, SDL_MapRGB(window_surface_ptr_->format, 143, 188, 143)) < 0)
     printf("%s\n", SDL_GetError());
 
-  sh->move();
-  sh->draw();
+  if (sheeps.size() > 0)
+  {
+    for (sheep *s : sheeps) {
+      s->move();
+      int i = -1;
+      //if(i = s->give_birth(sheeps)>=0)
+      //  sheeps.push_back(new sheep("../../media/sheep.png",window_surface_ptr_));
+      s->draw();
+    }
+  }
+  else
+    return;
+  
+  for (wolf *w : wolves)
+  {
+
+    int i = -1;
+    if (sheeps.size() > 0)
+    {
+      auto it = sheeps.begin();
+      // the wolf looks for the closest sheep
+      if (i = w->search(sheeps) >= 0) {
+        it = sheeps.erase(it + i);
+      }
+    }
+    w->move();
+    w->draw();
+  }
  
   if (SDL_UpdateWindowSurface(window_ptr) < 0){
       printf("Update Surface failed\n");
   }
 }
 
-// -------------------------- ANIMAL ----------------------------
+// ----------------------------------- ANIMAL ----------------------------------------
 
 animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr){
     image_ptr_ = load_surface_for(file_path, window_surface_ptr);
     window_surface_ptr_ = window_surface_ptr;
     
     // coordonnées initiales de l'animal
-    srand(time(NULL));
-    x = (rand() % (frame_width - (2 * frame_boundary))) + frame_boundary;
-    y = (rand() % (frame_height - (2 * frame_boundary))) + frame_boundary;
-    
-    printf("x = %u\n",x);
-    printf("y = %u\n",y);
-    srand(time(NULL));
-    x_speed = (rand() % 3 + 3) * ((rand() % 2 == 0) ? -1 : 1);
-    y_speed = (rand() % 3 + 3) * ((rand() % 2 == 0) ? -1 : 1);
+    rect.x = (rand() % (frame_width - (2 * frame_boundary))) + frame_boundary;
+    rect.y = (rand() % (frame_height - (2 * frame_boundary))) + frame_boundary;
+
+    x_speed = (rand() % 5 + 5) * ((rand() % 2 == 0) ? -1 : 1);
+    y_speed = (rand() % 5 + 5) * ((rand() % 2 == 0) ? -1 : 1);
+}
+
+animal::~animal(){
+  SDL_FreeSurface(image_ptr_);
+  SDL_FreeSurface(window_surface_ptr_);
 }
 
 void animal::draw(){
-  SDL_Rect size;
-  size.x = x;
-  size.y = y;
-  size.w = 67;
-  size.h = 71;
-  SDL_BlitScaled(image_ptr_, NULL, window_surface_ptr_, &size);
+  SDL_BlitScaled(image_ptr_, NULL, window_surface_ptr_, &rect);
 }
 
 //GETTERS
 
 unsigned animal::get_x(){
-  return x;
+  return rect.x;
 }
 
 unsigned animal::get_y(){
-  return y;
+  return rect.y;
 }
 
 int animal::get_x_speed(){
@@ -169,6 +218,14 @@ int animal::get_x_speed(){
 
 int animal::get_y_speed(){
   return y_speed;
+}
+
+unsigned animal::get_radius(){
+  return radius;
+}
+
+void animal::set_radius(unsigned radius){
+  this->radius = radius;
 }
 
 //SETTERS
@@ -182,27 +239,79 @@ void animal::set_y_speed(int speed) {
 }
 
 void animal::set_x(int x){
-  this->x = x;
+  rect.x = x;
 }
 
 void animal::set_y(int y){
-  this->y = y;
+  rect.y = y;
 }
 
-// -------------------------  SHEEP ---------------------------
+void animal::set_rect(unsigned h, unsigned w){
+  rect.h = h;
+  rect.w = w;
+}
+
+// -----------------------------------  SHEEP ----------------------------------
 
 void sheep::move(){
+  // déplacement
   unsigned x = get_x();
   unsigned y = get_y();
   int speed_x = get_x_speed();
   int speed_y = get_y_speed();
 
-  if(x < frame_boundary || x > frame_width - frame_boundary)
+  if((x < frame_boundary && speed_x < 0) || ( x > frame_width - frame_boundary && speed_x > 0))
     set_x_speed(speed_x * (-1));
   set_x(x + speed_x);
 
-  if(y < frame_boundary || y > frame_height - frame_boundary)
+  if((y < frame_boundary && speed_y < 0) || (y > frame_height - frame_boundary && speed_y > 0))
     set_y_speed(speed_y * (-1));
   set_y(y + speed_y);
 }
 
+int sheep::give_birth(std::vector<sheep *> sheeps){
+  // tuer le mouton le plus proche
+  if (sheeps.size() == 0)
+    return -1;
+  for (int i = 1; i < sheeps.size(); i++){
+    int dist = distance(get_x(),get_y(),sheeps[i]->get_x(),sheeps[i]->get_y());
+    if (dist < get_radius())
+    {
+      return i;
+    }
+  }
+  return -1;
+}
+
+
+// ---------------------------------- WOLF ---------------------------------------
+
+void wolf::move(){
+  // déplacement
+  unsigned x = get_x();
+  unsigned y = get_y();
+  int speed_x = get_x_speed();
+  int speed_y = get_y_speed();
+
+  if((x < frame_boundary && speed_x < 0) || ( x > frame_width - frame_boundary && speed_x > 0))
+    set_x_speed(speed_x * (-1));
+  set_x(x + speed_x);
+
+  if((y < frame_boundary && speed_y < 0) || (y > frame_height - frame_boundary && speed_y > 0))
+    set_y_speed(speed_y * (-1));
+  set_y(y + speed_y);
+}
+
+int wolf::search(std::vector<sheep *> sheeps){
+  // tuer le mouton le plus proche
+  if (sheeps.size() == 0)
+    return -1;
+
+  int min = distance(get_x(),get_y(),sheeps[0]->get_x(),sheeps[0]->get_y());;
+  for (int i = 1; i < sheeps.size(); i++){
+    int dist = distance(get_x(),get_y(),sheeps[i]->get_x(),sheeps[i]->get_y());
+    if (dist < get_radius() && dist < min)
+        min = dist;
+  }
+  return (min < get_radius()) ? min : -1;
+}
