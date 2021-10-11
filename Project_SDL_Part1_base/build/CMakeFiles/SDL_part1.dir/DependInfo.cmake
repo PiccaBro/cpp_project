@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/celia/Documents/Epita/S7/C++/cpp_project/Project_SDL_Part1_base/Project_SDL1.cpp" "/home/celia/Documents/Epita/S7/C++/cpp_project/Project_SDL_Part1_base/build/CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o"
-  "/home/celia/Documents/Epita/S7/C++/cpp_project/Project_SDL_Part1_base/main.cpp" "/home/celia/Documents/Epita/S7/C++/cpp_project/Project_SDL_Part1_base/build/CMakeFiles/SDL_part1.dir/main.cpp.o"
+  "/home/jw-pc/Desktop/EPITA/S7/c++_avance/cpp_project/Project_SDL_Part1_base/Project_SDL1.cpp" "/home/jw-pc/Desktop/EPITA/S7/c++_avance/cpp_project/Project_SDL_Part1_base/build/CMakeFiles/SDL_part1.dir/Project_SDL1.cpp.o"
+  "/home/jw-pc/Desktop/EPITA/S7/c++_avance/cpp_project/Project_SDL_Part1_base/main.cpp" "/home/jw-pc/Desktop/EPITA/S7/c++_avance/cpp_project/Project_SDL_Part1_base/build/CMakeFiles/SDL_part1.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
