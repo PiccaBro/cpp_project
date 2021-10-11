@@ -15,6 +15,7 @@
 #include <math.h>
 
 
+class wolf;
 
 // Defintions
 constexpr double frame_rate = 60.0; // refresh rate
@@ -78,10 +79,11 @@ class sheep : public animal {
   public:
   sheep(const std::string& file, SDL_Surface* window_surface):animal(file, window_surface){
      set_rect(71, 67);
-     set_radius(10);
+     set_radius(20);
   }
   ~sheep(){}
   int give_birth(std::vector<sheep *>sheeps);
+  void run_from_wolf(std::vector<wolf *>wolfs);
   void move();
   // todo
   // Ctor
@@ -103,7 +105,7 @@ class wolf : public animal {
   }
   ~wolf(){}
   virtual void move();
-  int search(std::vector<sheep *> sheeps);
+  int chaise(std::vector<sheep *> sheeps);
 };
 
 

@@ -7,6 +7,7 @@
 #include <random>
 #include <string>
 
+
 //--------------------------- INIT ------------------------------
 
 void init() {
@@ -149,9 +150,15 @@ void ground::update(SDL_Window *window_ptr){
   {
     for (sheep *s : sheeps) {
       s->move();
-      int i = -1;
-      //if(i = s->give_birth(sheeps)>=0)
-      //  sheeps.push_back(new sheep("../../media/sheep.png",window_surface_ptr_));
+      int i = s->give_birth(sheeps);
+      //printf("New sheep: %d\n",i);
+      if(i>=0){
+        sheep *new_sheep = new sheep("../../media/sheep.png",window_surface_ptr_);
+        new_sheep->set_x(sheeps[i]->get_x()+50); //arbitrary choosen
+        new_sheep->set_y(sheeps[i]->get_y()+50); //arbitrary choosen
+        sheeps.push_back(new_sheep);
+      }
+      //s->run_from_wolf(wolves);
       s->draw();
     }
   }
@@ -160,17 +167,16 @@ void ground::update(SDL_Window *window_ptr){
   
   for (wolf *w : wolves)
   {
-
-    int i = -1;
+    w->move();
     if (sheeps.size() > 0)
     {
       auto it = sheeps.begin();
       // the wolf looks for the closest sheep
-      if (i = w->search(sheeps) >= 0) {
+      int i = w->chaise(sheeps);
+      //printf("EAT SHEEP: %d\n",i);
+      if(i >= 0)
         it = sheeps.erase(it + i);
-      }
     }
-    w->move();
     w->draw();
   }
  
@@ -273,14 +279,28 @@ int sheep::give_birth(std::vector<sheep *> sheeps){
   // tuer le mouton le plus proche
   if (sheeps.size() == 0)
     return -1;
-  for (int i = 1; i < sheeps.size(); i++){
-    int dist = distance(get_x(),get_y(),sheeps[i]->get_x(),sheeps[i]->get_y());
-    if (dist < get_radius())
-    {
-      return i;
-    }
+  for (int i = 0; i < sheeps.size(); i++){
+    unsigned dist = distance(get_x(),get_y(),sheeps[i]->get_x(),sheeps[i]->get_y());
+    if (dist > 0 && dist < get_radius())
+        return i;
   }
   return -1;
+}
+
+void sheep::run_from_wolf(std::vector<wolf *> wolfs){
+  unsigned x = get_x();
+  unsigned y = get_y();
+  int speed_x = get_x_speed();
+  int speed_y = get_y_speed();
+
+  for (int i = 0; i < wolfs.size(); i++){
+    unsigned dist = distance(get_x(),get_y(),wolfs[i]->get_x(),wolfs[i]->get_y());
+    unsigned rad = get_radius() + wolfs[i]->get_radius();
+    if(dist < rad){
+      set_x_speed(speed_x * (-1));
+      set_y_speed(speed_y * (-1));
+    }
+  }
 }
 
 
@@ -302,11 +322,11 @@ void wolf::move(){
   set_y(y + speed_y);
 }
 
-int wolf::search(std::vector<sheep *> sheeps){
+int wolf::chaise(std::vector<sheep *> sheeps){
   // tuer le mouton le plus proche
   if (sheeps.size() == 0)
     return -1;
-
+/*
   int min = distance(get_x(),get_y(),sheeps[0]->get_x(),sheeps[0]->get_y());;
   for (int i = 1; i < sheeps.size(); i++){
     int dist = distance(get_x(),get_y(),sheeps[i]->get_x(),sheeps[i]->get_y());
@@ -314,4 +334,10 @@ int wolf::search(std::vector<sheep *> sheeps){
         min = dist;
   }
   return (min < get_radius()) ? min : -1;
+  */
+ for (int i = 0; i < sheeps.size(); i++){
+    if (distance(get_x(),get_y(),sheeps[i]->get_x(),sheeps[i]->get_y()) < get_radius())
+        return i;
+  }
+  return -1;
 }

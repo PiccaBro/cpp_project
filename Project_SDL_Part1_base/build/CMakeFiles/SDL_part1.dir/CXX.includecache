@@ -44,6 +44,14 @@ vector
 math.h
 -
 
+/home/jw-pc/Desktop/EPITA/S7/c++_avance/cpp_project/Project_SDL_Part1_base/main.cpp
+Project_SDL1.h
+/home/jw-pc/Desktop/EPITA/S7/c++_avance/cpp_project/Project_SDL_Part1_base/Project_SDL1.h
+stdio.h
+-
+string
+-
+
 /usr/include/SDL2/SDL.h
 SDL_main.h
 /usr/include/SDL2/SDL_main.h
