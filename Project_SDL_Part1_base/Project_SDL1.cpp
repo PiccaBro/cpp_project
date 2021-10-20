@@ -143,12 +143,12 @@ std::vector<wolf *> ground::get_wolves(){
 //sheeps.emplace.back(args);
 void ground::add_animal(std::string name){
     if (name == "sheep"){
-        //sheeps.emplace_back("../../media/sheep.png", window_surface_ptr_);
-        sheeps.push_back(new sheep("../../media/sheep.png", window_surface_ptr_));
+        //sheeps.emplace_back("../media/sheep.png", window_surface_ptr_);
+        sheeps.push_back(new sheep("../media/sheep.png", window_surface_ptr_));
     }
     else if (name == "wolf"){
-        //wolves.emplace_back("../../media/wolf.png", window_surface_ptr_);
-        wolves.push_back(new wolf("../../media/wolf.png", window_surface_ptr_));
+        //wolves.emplace_back("../media/wolf.png", window_surface_ptr_);
+        wolves.push_back(new wolf("../media/wolf.png", window_surface_ptr_));
     }
     else
         printf("Error: unknow name '%s' !", name.c_str());
