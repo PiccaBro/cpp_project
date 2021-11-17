@@ -160,7 +160,8 @@ void ground::update(SDL_Window *window_ptr){
 
     // sheeps update
 
-    for (sheep *s : sheeps){
+    for (auto *s : sheeps){
+        s->run_from_wolf(wolves);
         s->move();
         s->draw();
     }
@@ -169,15 +170,16 @@ void ground::update(SDL_Window *window_ptr){
     for (wolf *w : wolves){
         // the wolf looks for the closest sheep
         auto it = sheeps.begin();
-        int i;
-        if (((i = w->chaise(sheeps)) > -1) && (w->get_target_dist() <= w->get_kill_radius())){
+        int i = w->chaise(sheeps);
+
+        if ((i > -1) && (w->get_target_dist() <= w->get_kill_radius())){
             it = sheeps.erase(it + i);
             w->set_target_x(-1);
         }
         w->move();
         w->draw();
     }
-
+    printf("\n");
     if (SDL_UpdateWindowSurface(window_ptr) < 0)
         printf("Update Surface failed\n");
 }
@@ -207,7 +209,10 @@ animal::~animal(){
 }
 
 void animal::draw(){
-    SDL_BlitScaled(image_ptr_, NULL, window_surface_ptr_, &rect);
+    SDL_Rect r = rect;
+    r.x += rect.w / 2;
+    r.y += rect.h / 2;
+    SDL_BlitScaled(image_ptr_, NULL, window_surface_ptr_, &r);
 }
 
 // GETTERS
@@ -217,7 +222,6 @@ int animal::get_speed() { return speed; }
 int animal::get_x_speed() { return x_speed; }
 int animal::get_y_speed() { return y_speed; }
 int animal::get_radius() { return radius; }
-
 
 // SETTERS
 void animal::set_x_speed(int speed) { x_speed = speed; }
@@ -234,19 +238,41 @@ void animal::set_radius(int radius) {this->radius = radius;}
 */
 
 void sheep::move(){
-    // movement
+    // Getters
     int x = get_x();
     int y = get_y();
     int speed_x = get_x_speed();
     int speed_y = get_y_speed();
+    bool effrayed = false;
 
-    if ((x < frame_boundary && speed_x < 0) || (x > frame_width - frame_boundary && speed_x > 0))
-        set_x_speed(speed_x * (-1));
-    set_x(x + speed_x);
-
-    if ((y < frame_boundary && speed_y < 0) || (y > frame_height - frame_boundary && speed_y > 0))
-        set_y_speed(speed_y * (-1));
-    set_y(y + speed_y);
+    // Run from wolves
+    if (hunter.x > -1){
+        int d = distance(x, y, hunter.x, hunter.y);
+        int speed = get_speed();
+        // Escape from boundaries
+        if ((x < frame_boundary && speed < 0) || (x > frame_width - frame_boundary && speed > 0))
+            hunter.x = x;
+        if ((y < frame_boundary && speed < 0) || (y > frame_height - frame_boundary && speed > 0))
+            hunter.y = y;
+        // Avoid to go back and forth between the two modes
+        if ((hunter.x > x && speed_x > 0) || (hunter.x < x && speed_x < 0))
+            set_x_speed(speed_x * -1);
+        if ((hunter.y > y && speed_y > 0) || (hunter.y < y && speed_y < 0))
+            set_y_speed(speed_y * -1);
+        // Speed up
+        set_x(x - (((hunter.x - x) * speed * 1.75) / d));
+        set_y(y - (((hunter.y - y) * speed) * 1.75 / d));
+    }
+    // No wolf around
+    else {
+        // Escape from boundaries
+        if ((x < frame_boundary && speed_x < 0) || (x > frame_width - frame_boundary && speed_x > 0))
+            set_x_speed(speed_x * (-1));
+        if ((y < frame_boundary && speed_y < 0) || (y > frame_height - frame_boundary && speed_y > 0))
+            set_y_speed(speed_y * (-1));
+        set_x(x + speed_x);
+        set_y(y + speed_y);
+    }
 }
 /*
 int sheep::give_birth(std::vector<sheep> sheeps)
@@ -262,48 +288,41 @@ int sheep::give_birth(std::vector<sheep> sheeps)
     }
     return -1;
 }
-
-void sheep::run_from_wolf(std::vector<wolf> wolves)
+*/
+void sheep::run_from_wolf(std::vector<wolf *> wolves)
 {
+    // Getters
     int x = get_x();
     int y = get_y();
     int speed_x = get_x_speed();
     int speed_y = get_y_speed();
     int radius = get_radius();
 
-    int count = 0;
-    std::vector<SDL_Point> points;
+    // Center of all wolves with their coordinates
+    SDL_Point h;
+    h.x = -1;
+    h.y = -1;
 
-    for (int i = 0; i < wolves.size(); i++)
+    int min = distance(x, y, wolves[0]->get_x(), wolves[0]->get_y());
+    int min_idx = 0;
+
+    for (int i = 1; i < wolves.size(); i++)
     {
-        int wolf_x = wolves[i].get_x();
-        int wolf_y = wolves[i].get_y();
+        int wolf_x = wolves[i]->get_x();
+        int wolf_y = wolves[i]->get_y();
         int dist = distance(x, y, wolf_x, wolf_y);
-        if (dist < radius){
-            SDL_Point point;
-            point.x = wolf_x;
-            point.y = wolf_y;
-            points.push_back(point);
-            count++;
+        if (dist < radius && dist < min){
+            min = dist;
+            min_idx = i;
+            h.x = wolf_x;
+            h.y = wolf_y;
         }
     }
-    if (count == 0)
-        return;
-
-    SDL_Point center;
-    int sum_x = 0;
-    int sum_y = 0;
-    for (SDL_Point point : points){
-        sum_x += point.x;
-        sum_y += point.y;
-    }
-    center.x = sum_x / count;
-    center.y = sum_y / count;
-    int d = distance(x, y, center.x, center.y);
-    set_x(x - (center.x - x) * speed_x / d);
-    set_y(y - (center.y - y) * speed_y / d);
+    hunter.x = h.x;
+    hunter.y = h.y;
+    hunter_dist = min;
 }
-*/
+
 /*
   +=====================================================+
   |                         WOLF                        |
@@ -312,18 +331,19 @@ void sheep::run_from_wolf(std::vector<wolf> wolves)
 
 void wolf::move()
 {
-    // movement
     int x = get_x();
     int y = get_y();
     int target_x = target.x;
 
-    if (target_x >= 0) {
+    // Hunt the closest sheep
+    if (target_x > -1) {
         int speed = get_speed();
         int target_y = target.y;
 
         set_x(x + (((target_x - x) * speed) / target_dist));
         set_y(y + (((target_y - y) * speed) / target_dist));    
     }
+    // Walk as the beginning
     else {
         int speed_x = get_x_speed();
         int speed_y = get_y_speed();
@@ -342,6 +362,8 @@ int wolf::chaise(std::vector<sheep *> sheeps)
       set_target_x(-1);
       return -1;
     }
+    if (!sheeps[0])
+        printf("ERROR ptr NULL\n");
     int radius = get_radius();
     int x = get_x();
     int y = get_y();
@@ -350,9 +372,10 @@ int wolf::chaise(std::vector<sheep *> sheeps)
 
     for (int i = 1; i < sheeps.size(); i++){
       int dist = distance(x, y, sheeps[i]->get_x(), sheeps[i]->get_y());
-      if (dist < radius && dist < min)
+      if (dist < radius && dist < min){
         min = dist;
         min_index = i;
+      }
     }
     if (min < radius) {
       sheep *target = sheeps[min_index];
@@ -365,18 +388,7 @@ int wolf::chaise(std::vector<sheep *> sheeps)
     return -1;
 }
 
-int wolf::get_kill_radius(){
-    return kill_radius;
-}
-
-int wolf::get_target_dist(){
-    return target_dist;
-}
-
-void wolf::set_target_x(int x){
-    target.x = x;
-}
-
-void wolf::set_target_y(int y){
-    target.y = y;
-}
+int wolf::get_kill_radius(){ return kill_radius; }
+int wolf::get_target_dist(){ return target_dist; }
+void wolf::set_target_x(int x){ target.x = x; }
+void wolf::set_target_y(int y){ target.y = y; }

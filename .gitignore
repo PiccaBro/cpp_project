@@ -32,4 +32,8 @@
 *.app
 
 #build
-Project_SDL_Part1_base/build/*
+Project_SDL_Part1_base/CMakeFiles
+Project_SDL_Part1_base/cmake_install.cmake
+Project_SDL_Part1_base/Makefile
+Project_SDL_Part1_base/CMakeCache.txt
+Project_SDL_Part1_base/SDL_part1

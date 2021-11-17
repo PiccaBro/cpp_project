@@ -144,6 +144,9 @@ public:
 
 class sheep : public animal
 {
+private:
+SDL_Point hunter;
+int hunter_dist;
 public:
     sheep(const std::string &file, SDL_Surface *window_surface)
     : animal(file, window_surface)
@@ -156,7 +159,7 @@ public:
 
     void move();
    // int give_birth(std::vector<sheep> sheeps);
-    //void run_from_wolf(std::vector<wolf> wolves);
+    void run_from_wolf(std::vector<wolf *> wolves);
 };
 
 /*
