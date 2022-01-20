@@ -15,6 +15,11 @@ ground::ground(SDL_Surface *window_surface_ptr)
 ground::~ground()
 {}
 
+std::vector<std::shared_ptr<animal>> ground::get_animals()
+{
+    return animals;
+}
+/*
 std::vector<sheep *> ground::get_sheeps()
 {
     return sheeps;
@@ -23,10 +28,12 @@ std::vector<sheep *> ground::get_sheeps()
 std::vector<wolf *> ground::get_wolves()
 {
     return wolves;
-}
+}*/
 // sheeps.emplace.back(args);
-void ground::add_animal(std::string name)
+void ground::add_animal(std::shared_ptr<animal> animal)
 {
+    animals.push_back(animal);
+    /*
     if (name == "sheep")
     {
         // sheeps.emplace_back("../media/sheep.png", window_surface_ptr_);
@@ -39,6 +46,7 @@ void ground::add_animal(std::string name)
     }
     else
         printf("Error: unknow name '%s' !", name.c_str());
+    */
 }
 
 void ground::update(SDL_Window *window_ptr)
@@ -50,13 +58,13 @@ void ground::update(SDL_Window *window_ptr)
 
     // sheeps update
 
-    for (auto *s : sheeps)
+    for (std::shared_ptr<animal> s : animals)
     {
-        s->run_from_wolf(wolves);
+        // s->run_from_wolf(wolves);
         s->move();
         s->draw();
     }
-
+    /*
     // wolves update
     for (wolf *w : wolves)
     {
@@ -71,7 +79,9 @@ void ground::update(SDL_Window *window_ptr)
         }
         w->move();
         w->draw();
+
     }
+    */
     if (SDL_UpdateWindowSurface(window_ptr) < 0)
         printf("Update Surface failed\n");
 }

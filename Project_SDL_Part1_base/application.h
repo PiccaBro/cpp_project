@@ -16,6 +16,15 @@
 
 class sheep;
 class wolf;
+class ground;
+class animal;
+
+enum animal_type
+{
+    SHEEP,
+    WOLF,
+    DOG
+};
 
 constexpr double frame_rate = 60.0; // refresh rate
 constexpr double frame_time = 1. / frame_rate;
@@ -82,6 +91,7 @@ private:
     int quit;
     unsigned n_sheep;
     unsigned n_wolf;
+    std::shared_ptr<ground> grd;
 
     // other attributes here, for example an instance of ground
 
@@ -110,10 +120,7 @@ class ground
 {
 private:
     SDL_Surface *window_surface_ptr_; // NON-OWNING ptr, again to the screen
-
-    // other attributes
-    std::vector<sheep *> sheeps;
-    std::vector<wolf *> wolves;
+    std::vector<std::shared_ptr<animal>> animals;
 
 public:
     ground(SDL_Surface *window_surface_ptr);
@@ -121,10 +128,8 @@ public:
     void update(SDL_Window *window); // refresh the screen : move & draw animals
 
     // other methods
-    void add_animal(std::string name);
-    // void set_sheeps(std::vector<sheep> sheeps);
-    std::vector<sheep *> get_sheeps();
-    std::vector<wolf *> get_wolves();
+    void add_animal(std::shared_ptr<animal>);
+    std::vector<std::shared_ptr<animal>> get_animals();
 };
 
 /*
@@ -146,12 +151,11 @@ private:
     int y_speed;
     SDL_Rect rect;
     int radius;
+    // enum animal_type type;
 
 public:
     animal(const std::string &file_path, SDL_Surface *window_surface_ptr);
-
     ~animal();
-
     void draw(); // draw the animal on the screen <-> window_surface_ptr.
 
     // getters
@@ -161,6 +165,7 @@ public:
     int get_y_speed();
     int get_speed();
     int get_radius();
+    enum animal_type get_type();
 
     // setters
     void set_x(int x);
@@ -169,9 +174,9 @@ public:
     void set_y_speed(int speed);
     void set_rect(unsigned h, unsigned w);
     void set_radius(int radius);
+    void set_type(enum animal_type type);
 
-    virtual void move()
-    {}
+    virtual void move(){};
 };
 
 /*
@@ -191,7 +196,8 @@ public:
         : animal(file, window_surface)
     {
         set_rect(71, 67);
-        set_radius(SHEEP_RADIUS);
+        set_radius(100);
+        // set_type(SHEEP);
     }
 
     ~sheep()
@@ -221,7 +227,8 @@ public:
         : animal(file, window_surface)
     {
         set_rect(42, 62);
-        set_radius(WOLF_RADIUS);
+        set_radius(300);
+        // set_type(WOLF);
         target.x = -1;
         target.y = -1;
         target_dist = 0;

@@ -39,8 +39,30 @@ application::application(int argc, char *argv[])
     // create the application window
     const char *title = "The Happy Farm";
     window_ptr_ = SDL_CreateWindow(title, 0, 0, frame_width, frame_height, 0);
+    window_surface_ptr_ = SDL_GetWindowSurface(window_ptr_);
+    if (window_surface_ptr_ == NULL)
+        printf("Create Surface failed\n");
+
+    // init ground
+    grd = std::make_shared<ground>(window_surface_ptr_);
+
+    // init animal count
     this->n_sheep = atoi(argv[1]);
     this->n_wolf = atoi(argv[2]);
+    for (size_t i = 0; i < n_sheep; i++)
+    {
+        std::shared_ptr<animal> s(
+            new sheep("../media/sheep.png", window_surface_ptr_));
+        grd->add_animal(s);
+    }
+    for (size_t i = 0; i < n_wolf; i++)
+    {
+        std::shared_ptr<animal> s(
+            new wolf("../media/wolf.png", window_surface_ptr_));
+        grd->add_animal(s);
+    }
+
+    // game loop
     quit = loop(std::stoul(argv[argc - 1]) * 1000);
 }
 
@@ -62,34 +84,13 @@ int application::loop(unsigned period)
 {
     unsigned int lastTime = 0, currentTime;
     quit = 0;
-
-    // create ground
-    window_surface_ptr_ = SDL_GetWindowSurface(window_ptr_);
-    if (window_surface_ptr_ == NULL)
-        printf("Create Surface failed\n");
-
-    ground the_ground = ground(window_surface_ptr_);
-    while (n_sheep > 0 || n_wolf > 0)
-    {
-        if (n_sheep > 0)
-        {
-            the_ground.add_animal("sheep");
-            n_sheep--;
-        }
-        if (n_wolf > 0)
-        {
-            the_ground.add_animal("wolf");
-            n_wolf--;
-        }
-    }
-
     // loop
     while (!quit)
     {
         currentTime = SDL_GetTicks();
         if (currentTime > lastTime + frame_rate)
         {
-            the_ground.update(window_ptr_);
+            grd->update(window_ptr_);
             SDL_Delay(frame_time);
             lastTime = currentTime;
         }
