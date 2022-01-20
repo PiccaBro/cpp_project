@@ -16,11 +16,11 @@ int main(int argc, char *argv[])
 
     std::cout << "Done with initilization" << std::endl;
 
-    application my_app = application(std::stoul(argv[1]), std::stoul(argv[2]));
+    std::shared_ptr<application> my_app(new application(argc, argv));
 
     std::cout << "Created window" << std::endl;
 
-    int retval = my_app.loop(std::stoul(argv[3]) * 1000);
+    int retval = my_app->get_exit_code();
 
     std::cout << "Exiting application with code " << retval << std::endl;
 

@@ -86,14 +86,17 @@ private:
     // other attributes here, for example an instance of ground
 
 public:
-    application(unsigned n_sheep, unsigned n_wolf);
+    application(int argc, char *argv[]);
     ~application();
-
     int
     loop(unsigned period); // main loop of the application.
                            // this ensures that the screen is updated
                            // at the correct rate.
                            // the application terminate after 'period' seconds
+    int get_exit_code()
+    {
+        return quit;
+    }
 };
 
 /*

@@ -34,13 +34,14 @@ void init()
   +=====================================================+
 */
 
-application::application(unsigned n_sheep, unsigned n_wolf)
+application::application(int argc, char *argv[])
 {
     // create the application window
     const char *title = "The Happy Farm";
     window_ptr_ = SDL_CreateWindow(title, 0, 0, frame_width, frame_height, 0);
-    this->n_sheep = n_sheep;
-    this->n_wolf = n_wolf;
+    this->n_sheep = atoi(argv[1]);
+    this->n_wolf = atoi(argv[2]);
+    quit = loop(std::stoul(argv[argc - 1]) * 1000);
 }
 
 application::~application()
