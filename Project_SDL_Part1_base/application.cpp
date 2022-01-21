@@ -17,7 +17,8 @@ void init()
 {
     // srand (time(NULL));
     // Initialize SDL
-    if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0)
+    int status = SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO);
+    if (status < 0)
         throw std::runtime_error("init():" + std::string(SDL_GetError()));
 
     // Initialize PNG loading
@@ -37,47 +38,44 @@ void init()
 application::application(int argc, char *argv[])
 {
     // create the application window
-    const char *title = "The Happy Farm";
-    window_ptr_ = SDL_CreateWindow(title, 0, 0, frame_width, frame_height, 0);
+    window_ptr_ =
+        SDL_CreateWindow("The Happy Farm", 0, 0, frame_width, frame_height, 0);
     window_surface_ptr_ = SDL_GetWindowSurface(window_ptr_);
     if (window_surface_ptr_ == NULL)
         printf("Create Surface failed\n");
 
     // init ground
-    grd = std::make_shared<ground>(window_surface_ptr_);
+    grd = std::make_unique<ground>(window_surface_ptr_);
 
     // init animal count
     this->n_sheep = atoi(argv[1]);
     this->n_wolf = atoi(argv[2]);
-    for (size_t i = 0; i < n_sheep; i++)
-    {
-        std::shared_ptr<animal> s(
-            new sheep("../media/sheep.png", window_surface_ptr_));
-        grd->add_animal(s);
-    }
-    for (size_t i = 0; i < n_wolf; i++)
-    {
-        std::shared_ptr<animal> s(
-            new wolf("../media/wolf.png", window_surface_ptr_));
-        grd->add_animal(s);
-    }
 
-    // game loop
+    for (size_t i = 0; i < std::max(n_sheep, n_wolf); i++)
+    {
+        if (i < n_sheep)
+        {
+            std::shared_ptr<animal> s = std::make_unique<sheep>(
+                "../media/sheep.png", window_surface_ptr_);
+            grd->add_animal(s);
+        }
+        if (i < n_wolf)
+        {
+            std::shared_ptr<animal> s = std::make_unique<wolf>(
+                "../media/wolf.png", window_surface_ptr_);
+            grd->add_animal(s);
+        }
+    }
     quit = loop(std::stoul(argv[argc - 1]) * 1000);
 }
 
 application::~application()
 {
     if (window_surface_ptr_ == NULL)
-    {
         std::cout << "ERROR ptr is NULL\n";
-        SDL_FreeSurface(window_surface_ptr_);
-    }
     if (window_surface_ptr_ == NULL)
-    {
         std::cout << "ERROR \n";
-        SDL_DestroyWindow(window_ptr_);
-    }
+    SDL_DestroyWindow(window_ptr_);
 }
 
 int application::loop(unsigned period)
@@ -97,10 +95,6 @@ int application::loop(unsigned period)
         if (currentTime > period)
             quit = 1;
     }
-
-    // free
     this->~application();
-    //
     return 0;
 }
-// Test push

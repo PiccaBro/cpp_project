@@ -15,16 +15,9 @@
 #include <vector>
 
 class sheep;
-class wolf;
 class ground;
 class animal;
-
-enum animal_type
-{
-    SHEEP,
-    WOLF,
-    DOG
-};
+class wolf;
 
 constexpr double frame_rate = 60.0; // refresh rate
 constexpr double frame_time = 1. / frame_rate;
@@ -33,8 +26,12 @@ constexpr unsigned frame_height = 900; // height of window in pixel
 constexpr unsigned frame_boundary =
     100; // minimal distance of animals to the border of the screen
 
-constexpr int WOLF_RADIUS = 300;
-constexpr int SHEEP_RADIUS = 100;
+enum animal_type
+{
+    SHEEP,
+    WOLF,
+    DOG
+};
 
 // helper function to initialize SDL
 void init();
@@ -63,7 +60,6 @@ namespace
             SDL_ConvertSurface(loaded_surface, window_surface_ptr->format, 0);
         if (!optimized_surface)
             printf("SDL_ConvertSurface: %s\n", SDL_GetError());
-
         return optimized_surface;
     }
 
@@ -86,7 +82,6 @@ private:
     // the following are OWNING ptrs
     SDL_Window *window_ptr_;
     SDL_Surface *window_surface_ptr_;
-    SDL_Event window_event_;
 
     int quit;
     unsigned n_sheep;
@@ -144,19 +139,20 @@ private:
     SDL_Surface *window_surface_ptr_; // surface on which the animal is drawn
                                       // (non-owning)
     SDL_Surface *image_ptr_; // texture of the animal (the loaded image)
-
+    SDL_Rect rect;
     // other attributes
     int speed;
     int x_speed;
     int y_speed;
-    SDL_Rect rect;
     int radius;
-    // enum animal_type type;
+    enum animal_type a_type;
 
 public:
     animal(const std::string &file_path, SDL_Surface *window_surface_ptr);
-    ~animal();
+    virtual ~animal();
     void draw(); // draw the animal on the screen <-> window_surface_ptr.
+    void stay_on_screen();
+    virtual void interact_with_animal(std::shared_ptr<animal> target){};
 
     // getters
     int get_x();
@@ -188,24 +184,19 @@ public:
 class sheep : public animal
 {
 private:
-    SDL_Point hunter;
-    int hunter_dist;
+    // SDL_Point hunter;
+    // int hunter_dist;
 
 public:
-    sheep(const std::string &file, SDL_Surface *window_surface)
-        : animal(file, window_surface)
-    {
-        set_rect(71, 67);
-        set_radius(100);
-        // set_type(SHEEP);
-    }
+    sheep(const std::string &file, SDL_Surface *window_surface);
 
     ~sheep()
     {}
 
     void move();
+    void interact_with_animal(std::shared_ptr<animal> target);
     // int give_birth(std::vector<sheep> sheeps);
-    void run_from_wolf(std::vector<wolf *> wolves);
+    // void run_from_wolf(std::vector<wolf *> wolves);
 };
 
 /*
@@ -223,25 +214,18 @@ private:
     int target_dist;
 
 public:
-    wolf(const std::string &file, SDL_Surface *window_surface)
-        : animal(file, window_surface)
-    {
-        set_rect(42, 62);
-        set_radius(300);
-        // set_type(WOLF);
-        target.x = -1;
-        target.y = -1;
-        target_dist = 0;
-        kill_radius = 20;
-    }
+    wolf(const std::string &file, SDL_Surface *window_surface);
 
     ~wolf()
     {}
+    void move();
+    void interact_with_animal(std::shared_ptr<animal> target);
 
-    virtual void move();
-    int chaise(std::vector<sheep *> sheeps);
+    // int chaise(std::vector<sheep *> sheeps);
+    /*
     int get_kill_radius();
     int get_target_dist();
     void set_target_x(int x);
     void set_target_y(int y);
+    */
 };

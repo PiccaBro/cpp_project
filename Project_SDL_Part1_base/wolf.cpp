@@ -6,10 +6,24 @@
   +=====================================================+
 */
 
+wolf::wolf(const std::string &file, SDL_Surface *window_surface)
+    : animal(file, window_surface)
+{
+    set_rect(42, 62);
+    set_radius(300);
+    set_type(WOLF);
+    target.x = -1;
+    target.y = -1;
+    target_dist = 0;
+    kill_radius = 20;
+}
+
 void wolf::move()
 {
     int x = get_x();
     int y = get_y();
+    stay_on_screen();
+    /*
     int target_x = target.x;
 
     // Hunt the closest sheep
@@ -24,19 +38,40 @@ void wolf::move()
     // Walk as the beginning
     else
     {
-        int speed_x = get_x_speed();
-        int speed_y = get_y_speed();
-        if ((y < frame_boundary && speed_y < 0)
-            || (y > frame_height - frame_boundary && speed_y > 0))
-            set_y_speed(speed_y * (-1));
-        set_y(y + speed_y);
-        if ((x < frame_boundary && speed_x < 0)
-            || (x > frame_width - frame_boundary && speed_x > 0))
-            set_x_speed(speed_x * (-1));
-        set_x(x + speed_x);
+        */
+    /*
+    int speed_x = get_x_speed();
+    int speed_y = get_y_speed();
+    if ((y < frame_boundary && speed_y < 0)
+        || (y > frame_height - frame_boundary && speed_y > 0))
+        set_y_speed(speed_y * (-1));
+    set_y(y + speed_y);
+    if ((x < frame_boundary && speed_x < 0)
+        || (x > frame_width - frame_boundary && speed_x > 0))
+        set_x_speed(speed_x * (-1));
+    set_x(x + speed_x);
+    */
+    //}
+}
+
+void wolf::interact_with_animal(std::shared_ptr<animal> target)
+{
+    int x = get_x();
+    int y = get_y();
+    int t_x = target->get_x();
+    int t_y = target->get_y();
+
+    // Hunt the closest sheep
+    if (t_x > -1 && target->get_type() == SHEEP)
+    {
+        int speed = get_speed();
+
+        // set_x(x + (((target_x - x) * speed) / target_dist));
+        // set_y(y + (((target_y - y) * speed) / target_dist));
     }
 }
 
+/*
 int wolf::chaise(std::vector<sheep *> sheeps)
 {
     if (sheeps.size() == 0)
@@ -72,7 +107,8 @@ int wolf::chaise(std::vector<sheep *> sheeps)
     set_target_x(-1);
     return -1;
 }
-
+*/
+/*
 int wolf::get_kill_radius()
 {
     return kill_radius;
@@ -89,3 +125,4 @@ void wolf::set_target_y(int y)
 {
     target.y = y;
 }
+*/

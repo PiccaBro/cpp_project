@@ -16,15 +16,15 @@ int main(int argc, char *argv[])
 
     std::cout << "Done with initilization" << std::endl;
 
-    std::shared_ptr<application> my_app(new application(argc, argv));
+    std::shared_ptr<application> my_app =
+        std::make_unique<application>(argc, argv);
 
     std::cout << "Created window" << std::endl;
 
     int retval = my_app->get_exit_code();
 
-    std::cout << "Exiting application with code " << retval << std::endl;
-
+    // std::cout << "Exiting application with code " << retval << std::endl;
     SDL_Quit();
-
-    return retval;
+    // return retval;
+    return 0;
 }

@@ -19,34 +19,10 @@ std::vector<std::shared_ptr<animal>> ground::get_animals()
 {
     return animals;
 }
-/*
-std::vector<sheep *> ground::get_sheeps()
-{
-    return sheeps;
-}
 
-std::vector<wolf *> ground::get_wolves()
-{
-    return wolves;
-}*/
-// sheeps.emplace.back(args);
 void ground::add_animal(std::shared_ptr<animal> animal)
 {
     animals.push_back(animal);
-    /*
-    if (name == "sheep")
-    {
-        // sheeps.emplace_back("../media/sheep.png", window_surface_ptr_);
-        sheeps.push_back(new sheep("../media/sheep.png", window_surface_ptr_));
-    }
-    else if (name == "wolf")
-    {
-        // wolves.emplace_back("../media/wolf.png", window_surface_ptr_);
-        wolves.push_back(new wolf("../media/wolf.png", window_surface_ptr_));
-    }
-    else
-        printf("Error: unknow name '%s' !", name.c_str());
-    */
 }
 
 void ground::update(SDL_Window *window_ptr)
@@ -63,25 +39,12 @@ void ground::update(SDL_Window *window_ptr)
         // s->run_from_wolf(wolves);
         s->move();
         s->draw();
-    }
-    /*
-    // wolves update
-    for (wolf *w : wolves)
-    {
-        // the wolf looks for the closest sheep
-        auto it = sheeps.begin();
-        int i = w->chaise(sheeps);
-
-        if ((i > -1) && (w->get_target_dist() <= w->get_kill_radius()))
+        for (std::shared_ptr<animal> t : animals)
         {
-            it = sheeps.erase(it + i);
-            w->set_target_x(-1);
+            s->interact_with_animal(t);
         }
-        w->move();
-        w->draw();
-
     }
-    */
+
     if (SDL_UpdateWindowSurface(window_ptr) < 0)
         printf("Update Surface failed\n");
 }

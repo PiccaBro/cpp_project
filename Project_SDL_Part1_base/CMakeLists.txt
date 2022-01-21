@@ -33,5 +33,5 @@ ELSE()
   include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
 
   add_executable(SDL_part1 main.cpp application.cpp ground.cpp animal.cpp sheep.cpp wolf.cpp)
-  target_link_libraries(SDL_part1 ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+  target_link_libraries(SDL_part1 ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} )#-fsanitize=address)
 ENDIF()
