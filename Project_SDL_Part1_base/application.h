@@ -86,6 +86,7 @@ private:
     int quit;
     unsigned n_sheep;
     unsigned n_wolf;
+    unsigned n_dog;
     std::shared_ptr<ground> grd;
 
     // other attributes here, for example an instance of ground
@@ -177,6 +178,51 @@ public:
 
 /*
   +=====================================================+
+  |                 Playable Character                  |
+  +=====================================================+
+*/
+
+class playable_character
+{
+private:
+    SDL_Surface *window_surface_ptr_; // surface on which the animal is drawn
+                                      // (non-owning)
+    SDL_Surface *image_ptr_; // texture of the animal (the loaded image)
+    SDL_Rect rect;
+    // other attributes
+    int speed;
+    int x_speed;
+    int y_speed;
+
+public:
+    playable_character(const std::string &file_path,
+                       SDL_Surface *window_surface_ptr);
+    virtual ~playable_character();
+    void
+    draw(); // draw the playable_character on the screen <-> window_surface_ptr.
+    void stay_on_screen();
+    virtual void interact_with_playable_character(
+        std::shared_ptr<playable_character> target){};
+
+    // getters
+    int get_x();
+    int get_y();
+    int get_x_speed();
+    int get_y_speed();
+    int get_speed();
+
+    // setters
+    void set_x(int x);
+    void set_y(int y);
+    void set_x_speed(int speed);
+    void set_y_speed(int speed);
+    void set_rect(unsigned h, unsigned w);
+
+    virtual void move(){};
+};
+
+/*
+  +=====================================================+
   |                        SHEEP                        |
   +=====================================================+
 */
@@ -209,9 +255,9 @@ class wolf : public animal
 {
 private:
     // coord target X Y
-    SDL_Point target; // RM
-    int kill_radius;
-    int target_dist;
+    // SDL_Point target; // RM
+    // int kill_radius;
+    // int target_dist;
 
 public:
     wolf(const std::string &file, SDL_Surface *window_surface);
@@ -228,4 +274,41 @@ public:
     void set_target_x(int x);
     void set_target_y(int y);
     */
+};
+
+/*
+  +=====================================================+
+  |                         DOG                         |
+  +=====================================================+
+*/
+
+class dog : public animal
+{
+private:
+public:
+    dog(const std::string &file, SDL_Surface *window_surface);
+
+    ~dog()
+    {}
+    void move();
+    void interact_with_animal(std::shared_ptr<animal> target);
+};
+
+/*
+  +=====================================================+
+  |                      SHEPHERD                       |
+  +=====================================================+
+*/
+
+class shepherd : public playable_character
+{
+private:
+public:
+    shepherd(const std::string &file, SDL_Surface *window_surface);
+
+    ~shepherd()
+    {}
+
+    void move();
+    void interact_with_animal(std::shared_ptr<animal> target);
 };

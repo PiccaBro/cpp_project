@@ -12,16 +12,14 @@ wolf::wolf(const std::string &file, SDL_Surface *window_surface)
     set_rect(42, 62);
     set_radius(300);
     set_type(WOLF);
-    target.x = -1;
-    target.y = -1;
-    target_dist = 0;
-    kill_radius = 20;
+    // target.x = -1;
+    // target.y = -1;
+    // target_dist = 0;
+    // kill_radius = 20;
 }
 
 void wolf::move()
 {
-    int x = get_x();
-    int y = get_y();
     stay_on_screen();
     /*
     int target_x = target.x;
@@ -55,21 +53,7 @@ void wolf::move()
 }
 
 void wolf::interact_with_animal(std::shared_ptr<animal> target)
-{
-    int x = get_x();
-    int y = get_y();
-    int t_x = target->get_x();
-    int t_y = target->get_y();
-
-    // Hunt the closest sheep
-    if (t_x > -1 && target->get_type() == SHEEP)
-    {
-        int speed = get_speed();
-
-        // set_x(x + (((target_x - x) * speed) / target_dist));
-        // set_y(y + (((target_y - y) * speed) / target_dist));
-    }
-}
+{}
 
 /*
 int wolf::chaise(std::vector<sheep *> sheeps)

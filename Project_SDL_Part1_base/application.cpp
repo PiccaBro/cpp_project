@@ -7,6 +7,7 @@
 #include <random>
 #include <string>
 
+using namespace std;
 /*
   +=====================================================+
   |                  INITIALISATION                     |
@@ -50,8 +51,9 @@ application::application(int argc, char *argv[])
     // init animal count
     this->n_sheep = atoi(argv[1]);
     this->n_wolf = atoi(argv[2]);
+    this->n_dog = atoi(argv[3]);
 
-    for (size_t i = 0; i < std::max(n_sheep, n_wolf); i++)
+    for (size_t i = 0; i < max(max(n_sheep, n_wolf), n_sheep); i++)
     {
         if (i < n_sheep)
         {
@@ -65,7 +67,15 @@ application::application(int argc, char *argv[])
                 "../media/wolf.png", window_surface_ptr_);
             grd->add_animal(s);
         }
+        if (i < n_dog)
+        {
+            std::shared_ptr<animal> s =
+                std::make_unique<dog>("../media/dog.png", window_surface_ptr_);
+            grd->add_animal(s);
+        }
     }
+    std::shared_ptr<shepherd> shep = std::make_unique<shepherd>(
+        "../media/shepherd.png", window_surface_ptr_);
     quit = loop(std::stoul(argv[argc - 1]) * 1000);
 }
 
