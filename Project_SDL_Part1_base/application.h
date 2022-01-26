@@ -14,10 +14,13 @@
 #include <optional>
 #include <vector>
 
+// Classes
 class sheep;
 class ground;
 class animal;
 class wolf;
+class object;
+class playable_character;
 
 constexpr double frame_rate = 60.0; // refresh rate
 constexpr double frame_time = 1. / frame_rate;
@@ -116,7 +119,7 @@ class ground
 {
 private:
     SDL_Surface *window_surface_ptr_; // NON-OWNING ptr, again to the screen
-    std::vector<std::shared_ptr<animal>> animals;
+    std::vector<std::shared_ptr<object>> objects;
 
 public:
     ground(SDL_Surface *window_surface_ptr);
@@ -124,8 +127,49 @@ public:
     void update(SDL_Window *window); // refresh the screen : move & draw animals
 
     // other methods
-    void add_animal(std::shared_ptr<animal>);
-    std::vector<std::shared_ptr<animal>> get_animals();
+    void add_object(std::shared_ptr<object>);
+    std::vector<std::shared_ptr<object>> get_objects();
+};
+
+/*
+  +=====================================================+
+  |                       OBJECT                        |
+  +=====================================================+
+*/
+
+class object
+{
+private:
+    SDL_Surface *window_surface_ptr_; // surface on which the object is drawn
+                                      // (non-owning)
+    SDL_Surface *image_ptr_; // texture of the object (the loaded image)
+    SDL_Rect rect;
+    // other attributes
+    int speed;
+    int x_speed;
+    int y_speed;
+
+public:
+    object(const std::string &file_path, SDL_Surface *window_surface_ptr);
+    ~object();
+    void draw(); // draw the object on the screen <-> window_surface_ptr.
+    virtual void stay_on_screen(){};
+
+    // getters
+    int get_x();
+    int get_y();
+    int get_x_speed();
+    int get_y_speed();
+    int get_speed();
+
+    // setters
+    void set_x(int x);
+    void set_y(int y);
+    void set_x_speed(int speed);
+    void set_y_speed(int speed);
+    void set_rect(unsigned h, unsigned w);
+
+    virtual void move(){};
 };
 
 /*
@@ -134,46 +178,24 @@ public:
   +=====================================================+
 */
 
-class animal
+class animal : public object
 {
 private:
-    SDL_Surface *window_surface_ptr_; // surface on which the animal is drawn
-                                      // (non-owning)
-    SDL_Surface *image_ptr_; // texture of the animal (the loaded image)
-    SDL_Rect rect;
-    // other attributes
-    int speed;
-    int x_speed;
-    int y_speed;
-    int radius;
     enum animal_type a_type;
 
 public:
-    animal(const std::string &file_path, SDL_Surface *window_surface_ptr);
-    virtual ~animal();
-    void draw(); // draw the animal on the screen <-> window_surface_ptr.
-    void stay_on_screen();
+    animal(const std::string &file_path, SDL_Surface *window_surface_ptr)
+        : object(file_path, window_surface_ptr){};
+    virtual ~animal(){};
     virtual void interact_with_animal(std::shared_ptr<animal> target){};
 
     // getters
-    int get_x();
-    int get_y();
-    int get_x_speed();
-    int get_y_speed();
-    int get_speed();
-    int get_radius();
     enum animal_type get_type();
 
     // setters
-    void set_x(int x);
-    void set_y(int y);
-    void set_x_speed(int speed);
-    void set_y_speed(int speed);
-    void set_rect(unsigned h, unsigned w);
-    void set_radius(int radius);
     void set_type(enum animal_type type);
 
-    virtual void move(){};
+    // void move(){};
 };
 
 /*
@@ -182,43 +204,14 @@ public:
   +=====================================================+
 */
 
-class playable_character
+class playable_character : public object
 {
 private:
-    SDL_Surface *window_surface_ptr_; // surface on which the animal is drawn
-                                      // (non-owning)
-    SDL_Surface *image_ptr_; // texture of the animal (the loaded image)
-    SDL_Rect rect;
-    // other attributes
-    int speed;
-    int x_speed;
-    int y_speed;
-
 public:
     playable_character(const std::string &file_path,
-                       SDL_Surface *window_surface_ptr);
-    virtual ~playable_character();
-    void
-    draw(); // draw the playable_character on the screen <-> window_surface_ptr.
-    void stay_on_screen();
-    virtual void interact_with_playable_character(
-        std::shared_ptr<playable_character> target){};
-
-    // getters
-    int get_x();
-    int get_y();
-    int get_x_speed();
-    int get_y_speed();
-    int get_speed();
-
-    // setters
-    void set_x(int x);
-    void set_y(int y);
-    void set_x_speed(int speed);
-    void set_y_speed(int speed);
-    void set_rect(unsigned h, unsigned w);
-
-    virtual void move(){};
+                       SDL_Surface *window_surface_ptr)
+        : object(file_path, window_surface_ptr){};
+    ~playable_character(){};
 };
 
 /*
@@ -238,7 +231,7 @@ public:
 
     ~sheep()
     {}
-
+    void stay_on_screen();
     void move();
     void interact_with_animal(std::shared_ptr<animal> target);
     // int give_birth(std::vector<sheep> sheeps);
@@ -265,6 +258,7 @@ public:
     ~wolf()
     {}
     void move();
+    void stay_on_screen();
     void interact_with_animal(std::shared_ptr<animal> target);
 
     // int chaise(std::vector<sheep *> sheeps);
@@ -290,6 +284,7 @@ public:
 
     ~dog()
     {}
+    void stay_on_screen();
     void move();
     void interact_with_animal(std::shared_ptr<animal> target);
 };
@@ -306,9 +301,8 @@ private:
 public:
     shepherd(const std::string &file, SDL_Surface *window_surface);
 
-    ~shepherd()
-    {}
-
+    ~shepherd(){};
+    void stay_on_screen();
     void move();
     void interact_with_animal(std::shared_ptr<animal> target);
 };

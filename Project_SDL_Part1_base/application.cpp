@@ -59,23 +59,24 @@ application::application(int argc, char *argv[])
         {
             std::shared_ptr<animal> s = std::make_unique<sheep>(
                 "../media/sheep.png", window_surface_ptr_);
-            grd->add_animal(s);
+            grd->add_object(s);
         }
         if (i < n_wolf)
         {
             std::shared_ptr<animal> s = std::make_unique<wolf>(
                 "../media/wolf.png", window_surface_ptr_);
-            grd->add_animal(s);
+            grd->add_object(s);
         }
         if (i < n_dog)
         {
             std::shared_ptr<animal> s =
                 std::make_unique<dog>("../media/dog.png", window_surface_ptr_);
-            grd->add_animal(s);
+            grd->add_object(s);
         }
     }
     std::shared_ptr<shepherd> shep = std::make_unique<shepherd>(
         "../media/shepherd.png", window_surface_ptr_);
+    grd->add_object(shep);
     quit = loop(std::stoul(argv[argc - 1]) * 1000);
 }
 
