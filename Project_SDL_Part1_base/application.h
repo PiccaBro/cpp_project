@@ -167,6 +167,7 @@ public:
     void set_y(int y);
     void set_x_speed(int speed);
     void set_y_speed(int speed);
+    void set_speed(int speed);
     void set_rect(unsigned h, unsigned w);
 
     virtual void move(){};
@@ -212,6 +213,7 @@ public:
                        SDL_Surface *window_surface_ptr)
         : object(file_path, window_surface_ptr){};
     ~playable_character(){};
+    void move();
 };
 
 /*
@@ -303,6 +305,6 @@ public:
 
     ~shepherd(){};
     void stay_on_screen();
-    void move();
+    // void move();
     void interact_with_animal(std::shared_ptr<animal> target);
 };
