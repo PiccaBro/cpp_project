@@ -11,9 +11,11 @@ sheep::sheep(const std::string &file, SDL_Surface *window_surface)
 {
     set_rect(71, 67);
     set_type(SHEEP);
+    set_x_speed(3);
+    set_y_speed(2);
 }
 
-void sheep::stay_on_screen()
+void sheep::move()
 {
     int x = get_x();
     int y = get_y();
@@ -27,11 +29,7 @@ void sheep::stay_on_screen()
         || (x > frame_width - frame_boundary && speed_x > 0))
         set_x_speed(speed_x * (-1));
     set_x(x + speed_x);
-}
 
-void sheep::move()
-{
-    stay_on_screen();
     /*
     // Getters
     int x = get_x();
@@ -66,40 +64,7 @@ void sheep::move()
         // Escape from boundaries
         */
 }
-void sheep::interact_with_animal(std::shared_ptr<animal> target)
-{
-    /*
-    // Getters
-    int x = get_x();
-    int y = get_y();
-    int t_x = target->get_x();
-    int t_y = target->get_y();
-    int speed_x = get_x_speed();
-    int speed_y = get_y_speed();
-    bool effrayed = false;
-    // Run from wolves
-    if (t_x > -1 && target->get_type() == WOLF)
-    {
-        int d = distance(x, y, t_x, t_y);
-        int speed = get_speed();
-        // Escape from boundaries
-        if ((x < frame_boundary && speed < 0)
-            || (x > frame_width - frame_boundary && speed > 0))
-            t_x = x;
-        if ((y < frame_boundary && speed < 0)
-            || (y > frame_height - frame_boundary && speed > 0))
-            t_y = y;
-        // Avoid to go back and forth between the two modes
-        if ((t_x > x && speed_x > 0) || (t_x < x && speed_x < 0))
-            set_x_speed(speed_x * -1);
-        if ((t_y > y && speed_y > 0) || (t_y < y && speed_y < 0))
-            set_y_speed(speed_y * -1);
-        // Speed up
-        set_x(x - (((t_x - x) * speed) * 1.75 / d));
-        set_y(y - (((t_y - y) * speed) * 1.75 / d));
-    }
-    */
-}
+
 /*
 int sheep::give_birth(std::vector<sheep> sheeps)
 {

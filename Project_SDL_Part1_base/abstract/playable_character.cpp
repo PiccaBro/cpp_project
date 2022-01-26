@@ -2,8 +2,10 @@
 
 void playable_character::move()
 {
-    set_speed(5);
-    int speed = get_speed();
+    int x_speed = get_x_speed();
+    int y_speed = get_y_speed();
+    int x = get_x();
+    int y = get_y();
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -13,14 +15,15 @@ void playable_character::move()
             exit(0);
             break;
         case SDL_KEYDOWN:
-            if (event.key.keysym.sym == 'q')
-                set_x(get_x() - speed);
-            if (event.key.keysym.sym == 'd')
-                set_x(get_x() + speed);
-            if (event.key.keysym.sym == 'z')
-                set_y(get_y() - speed);
-            if (event.key.keysym.sym == 's')
-                set_y(get_y() + speed);
+            if (event.key.keysym.sym == 'q' && x > frame_boundary)
+                set_x(get_x() - x_speed);
+            if (event.key.keysym.sym == 'd' && x < frame_width - frame_boundary)
+                set_x(get_x() + x_speed);
+            if (event.key.keysym.sym == 'z' && y > frame_boundary)
+                set_y(get_y() - y_speed);
+            if (event.key.keysym.sym == 's'
+                && y < frame_height - frame_boundary)
+                set_y(get_y() + y_speed);
             break;
         default:
             break;

@@ -11,9 +11,11 @@ dog::dog(const std::string &file, SDL_Surface *window_surface)
 {
     set_rect(42, 62);
     set_type(DOG);
+    set_x_speed(5);
+    set_y_speed(5);
 }
 
-void dog::stay_on_screen()
+void dog::move()
 {
     int x = get_x();
     int y = get_y();
@@ -28,11 +30,3 @@ void dog::stay_on_screen()
         set_x_speed(speed_x * (-1));
     set_x(x + speed_x);
 }
-
-void dog::move()
-{
-    stay_on_screen();
-}
-
-void dog::interact_with_animal(std::shared_ptr<animal> target)
-{}

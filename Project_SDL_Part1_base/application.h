@@ -151,7 +151,8 @@ private:
 public:
     interacting_object(){};
     ~interacting_object(){};
-
+    virtual void
+    interact_with_object(std::shared_ptr<interacting_object> obj){};
     int getLife()
     {
         return this->life;
@@ -232,7 +233,6 @@ public:
 class moving_object : public rendered_object
 {
 private:
-    int speed;
     int x_speed;
     int y_speed;
 
@@ -241,18 +241,13 @@ public:
                   SDL_Surface *window_surface_ptr);
     ~moving_object(){};
 
-    virtual void stay_on_screen(){};
-
     // getters
     int get_x_speed();
     int get_y_speed();
-    int get_speed();
 
     // setters
     void set_x_speed(int speed);
     void set_y_speed(int speed);
-    void set_speed(int speed);
-
     virtual void move(){};
 };
 
@@ -271,7 +266,6 @@ public:
     animal(const std::string &file_path, SDL_Surface *window_surface_ptr)
         : moving_object(file_path, window_surface_ptr){};
     virtual ~animal(){};
-    virtual void interact_with_animal(std::shared_ptr<animal> target){};
 
     // getters
     enum animal_type get_type();
@@ -311,9 +305,7 @@ public:
 
     ~sheep()
     {}
-    void stay_on_screen();
     void move();
-    void interact_with_animal(std::shared_ptr<animal> target);
 };
 
 /*
@@ -331,8 +323,6 @@ public:
     ~wolf()
     {}
     void move();
-    void stay_on_screen();
-    void interact_with_animal(std::shared_ptr<animal> target);
 };
 
 /*
@@ -349,9 +339,7 @@ public:
 
     ~dog()
     {}
-    void stay_on_screen();
     void move();
-    void interact_with_animal(std::shared_ptr<animal> target);
 };
 
 /*
@@ -367,6 +355,4 @@ public:
     shepherd(const std::string &file, SDL_Surface *window_surface);
 
     ~shepherd(){};
-    void stay_on_screen();
-    void interact_with_animal(std::shared_ptr<animal> target);
 };
