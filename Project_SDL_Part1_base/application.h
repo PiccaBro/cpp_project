@@ -15,12 +15,15 @@
 #include <vector>
 
 // Classes
-class sheep;
+class application;
 class ground;
+class interacting_object;
+class rendered_object;
+class moving_object;
 class animal;
-class wolf;
-class object;
 class playable_character;
+class sheep;
+class wolf;
 
 constexpr double frame_rate = 60.0; // refresh rate
 constexpr double frame_time = 1. / frame_rate;
@@ -119,7 +122,7 @@ class ground
 {
 private:
     SDL_Surface *window_surface_ptr_; // NON-OWNING ptr, again to the screen
-    std::vector<std::shared_ptr<object>> objects;
+    std::vector<std::shared_ptr<moving_object>> moving_objects;
 
 public:
     ground(SDL_Surface *window_surface_ptr);
@@ -127,48 +130,128 @@ public:
     void update(SDL_Window *window); // refresh the screen : move & draw animals
 
     // other methods
-    void add_object(std::shared_ptr<object>);
-    std::vector<std::shared_ptr<object>> get_objects();
+    void add_object(std::shared_ptr<moving_object>);
+    std::vector<std::shared_ptr<moving_object>> get_objects();
 };
 
 /*
   +=====================================================+
-  |                       OBJECT                        |
+  |                INTERACTING OBJECT                   |
   +=====================================================+
 */
 
-class object
+class interacting_object
 {
 private:
-    SDL_Surface *window_surface_ptr_; // surface on which the object is drawn
-                                      // (non-owning)
-    SDL_Surface *image_ptr_; // texture of the object (the loaded image)
+    int life;
+    int sex;
+    bool status;
+    bool prey;
+
+public:
+    interacting_object(){};
+    ~interacting_object(){};
+
+    int getLife()
+    {
+        return this->life;
+    }
+
+    void setLife(int life)
+    {
+        this->life = life;
+    }
+
+    int getSex()
+    {
+        return this->sex;
+    }
+
+    void setSex(int sex)
+    {
+        this->sex = sex;
+    }
+
+    bool isStatus()
+    {
+        return this->status;
+    }
+
+    void setStatus(bool status)
+    {
+        this->status = status;
+    }
+
+    bool isPrey()
+    {
+        return this->prey;
+    }
+
+    void setPrey(bool prey)
+    {
+        this->prey = prey;
+    }
+};
+
+/*
+  +=====================================================+
+  |                  RENDERED OBJECT                    |
+  +=====================================================+
+*/
+class rendered_object : public interacting_object
+{
+private:
+    SDL_Surface *window_surface_ptr_; // surface on which the rendered_object is
+                                      // drawn (non-owning)
+    SDL_Surface
+        *image_ptr_; // texture of the rendered_object (the loaded image)
     SDL_Rect rect;
-    // other attributes
+
+public:
+    rendered_object(const std::string &file_path,
+                    SDL_Surface *window_surface_ptr);
+    ~rendered_object();
+    void
+    draw(); // draw the rendered_object on the screen <-> window_surface_ptr.
+
+    // getters
+    int get_x();
+    int get_y();
+
+    // setters
+    void set_x(int x);
+    void set_y(int y);
+    void set_rect(unsigned h, unsigned w);
+};
+
+/*
+  +=====================================================+
+  |                    MOVING OBJECT                    |
+  +=====================================================+
+*/
+class moving_object : public rendered_object
+{
+private:
     int speed;
     int x_speed;
     int y_speed;
 
 public:
-    object(const std::string &file_path, SDL_Surface *window_surface_ptr);
-    ~object();
-    void draw(); // draw the object on the screen <-> window_surface_ptr.
+    moving_object(const std::string &file_path,
+                  SDL_Surface *window_surface_ptr);
+    ~moving_object(){};
+
     virtual void stay_on_screen(){};
 
     // getters
-    int get_x();
-    int get_y();
     int get_x_speed();
     int get_y_speed();
     int get_speed();
 
     // setters
-    void set_x(int x);
-    void set_y(int y);
     void set_x_speed(int speed);
     void set_y_speed(int speed);
     void set_speed(int speed);
-    void set_rect(unsigned h, unsigned w);
 
     virtual void move(){};
 };
@@ -179,14 +262,14 @@ public:
   +=====================================================+
 */
 
-class animal : public object
+class animal : public moving_object
 {
 private:
     enum animal_type a_type;
 
 public:
     animal(const std::string &file_path, SDL_Surface *window_surface_ptr)
-        : object(file_path, window_surface_ptr){};
+        : moving_object(file_path, window_surface_ptr){};
     virtual ~animal(){};
     virtual void interact_with_animal(std::shared_ptr<animal> target){};
 
@@ -195,8 +278,6 @@ public:
 
     // setters
     void set_type(enum animal_type type);
-
-    // void move(){};
 };
 
 /*
@@ -205,13 +286,13 @@ public:
   +=====================================================+
 */
 
-class playable_character : public object
+class playable_character : public moving_object
 {
 private:
 public:
     playable_character(const std::string &file_path,
                        SDL_Surface *window_surface_ptr)
-        : object(file_path, window_surface_ptr){};
+        : moving_object(file_path, window_surface_ptr){};
     ~playable_character(){};
     void move();
 };
@@ -225,9 +306,6 @@ public:
 class sheep : public animal
 {
 private:
-    // SDL_Point hunter;
-    // int hunter_dist;
-
 public:
     sheep(const std::string &file, SDL_Surface *window_surface);
 
@@ -236,8 +314,6 @@ public:
     void stay_on_screen();
     void move();
     void interact_with_animal(std::shared_ptr<animal> target);
-    // int give_birth(std::vector<sheep> sheeps);
-    // void run_from_wolf(std::vector<wolf *> wolves);
 };
 
 /*
@@ -249,11 +325,6 @@ public:
 class wolf : public animal
 {
 private:
-    // coord target X Y
-    // SDL_Point target; // RM
-    // int kill_radius;
-    // int target_dist;
-
 public:
     wolf(const std::string &file, SDL_Surface *window_surface);
 
@@ -262,14 +333,6 @@ public:
     void move();
     void stay_on_screen();
     void interact_with_animal(std::shared_ptr<animal> target);
-
-    // int chaise(std::vector<sheep *> sheeps);
-    /*
-    int get_kill_radius();
-    int get_target_dist();
-    void set_target_x(int x);
-    void set_target_y(int y);
-    */
 };
 
 /*
@@ -305,6 +368,5 @@ public:
 
     ~shepherd(){};
     void stay_on_screen();
-    // void move();
     void interact_with_animal(std::shared_ptr<animal> target);
 };

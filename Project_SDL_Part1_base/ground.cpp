@@ -15,14 +15,14 @@ ground::ground(SDL_Surface *window_surface_ptr)
 ground::~ground()
 {}
 
-std::vector<std::shared_ptr<object>> ground::get_objects()
+std::vector<std::shared_ptr<moving_object>> ground::get_objects()
 {
-    return objects;
+    return moving_objects;
 }
 
-void ground::add_object(std::shared_ptr<object> object)
+void ground::add_object(std::shared_ptr<moving_object> moving_object)
 {
-    objects.push_back(object);
+    moving_objects.push_back(moving_object);
 }
 
 void ground::update(SDL_Window *window_ptr)
@@ -34,7 +34,7 @@ void ground::update(SDL_Window *window_ptr)
 
     // sheeps update
 
-    for (std::shared_ptr<object> s : objects)
+    for (std::shared_ptr<moving_object> s : moving_objects)
     {
         // s->run_from_wolf(wolves);
         s->move();

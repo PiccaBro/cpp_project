@@ -23,16 +23,18 @@ IF(WIN32)
   link_directories(${SDL2_LINK_DIRS}, ${SDL2IMAGE_LINK_DIRS})
 
   add_executable(SDL_part1 
-    main.cpp 
-    application.cpp 
-    ground.cpp 
-    abstract/animal.cpp 
-    derived/sheep.cpp 
-    derived/wolf.cpp 
-    derived/dog.cpp 
-    derived/shepherd.cpp 
-    abstract/playable_character.cpp 
-    abstract/object.cpp)
+  main.cpp 
+  application.cpp 
+  ground.cpp 
+  abstract/animal.cpp
+  abstract/playable_character.cpp 
+  abstract/interacting_object.cpp 
+  abstract/rendered_object.cpp 
+  abstract/moving_object.cpp 
+  derived/sheep.cpp 
+  derived/wolf.cpp 
+  derived/dog.cpp 
+  derived/shepherd.cpp)
 
   target_link_libraries(SDL_part1 PUBLIC SDL2 SDL2main SDL2_image)
 ELSE()
@@ -47,13 +49,15 @@ ELSE()
   main.cpp 
   application.cpp 
   ground.cpp 
-  abstract/animal.cpp 
+  abstract/animal.cpp
+  abstract/playable_character.cpp 
+  abstract/interacting_object.cpp 
+  abstract/rendered_object.cpp 
+  abstract/moving_object.cpp 
   derived/sheep.cpp 
   derived/wolf.cpp 
   derived/dog.cpp 
-  derived/shepherd.cpp 
-  abstract/playable_character.cpp 
-  abstract/object.cpp)
+  derived/shepherd.cpp)
 
-  target_link_libraries(SDL_part1 ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} )#-fsanitize=address)
+  target_link_libraries(SDL_part1 ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})#-fsanitize=address)
 ENDIF()
