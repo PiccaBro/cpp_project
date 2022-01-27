@@ -39,6 +39,17 @@ void ground::update(SDL_Window *window_ptr)
         // s->run_from_wolf(wolves);
         s->move();
         s->draw();
+        for (std::shared_ptr<moving_object> obj : moving_objects)
+        {
+            s->interact_with_object(obj);
+        }
+        if (s->getBirth() == true)
+        {
+            moving_objects.push_back(std::make_unique<sheep>(
+                "../media/sheep.png", window_surface_ptr_));
+            std::cout << "BIRTH\n";
+            s->setBirth(false);
+        }
     }
 
     if (SDL_UpdateWindowSurface(window_ptr) < 0)

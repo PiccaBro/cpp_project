@@ -10,6 +10,10 @@ dog::dog(const std::string &file, SDL_Surface *window_surface)
     : animal(file, window_surface)
 {
     set_rect(42, 62);
+    setStamina(10);
+    setSex(false);
+    setAlive(true);
+    setPrey(false);
     set_type(DOG);
     set_x_speed(5);
     set_y_speed(5);

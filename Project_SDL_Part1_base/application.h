@@ -143,44 +143,56 @@ public:
 class interacting_object
 {
 private:
-    int life;
-    int sex;
-    bool status;
+    int stamina; // 0-10
+    bool sex;
+    bool alive;
     bool prey;
+    bool give_birth;
+    enum animal_type a_type;
 
 public:
     interacting_object(){};
     ~interacting_object(){};
-    virtual void
-    interact_with_object(std::shared_ptr<interacting_object> obj){};
-    int getLife()
+
+    virtual void interact_with_object(std::shared_ptr<moving_object> obj){};
+    int getStamina()
     {
-        return this->life;
+        return this->stamina;
     }
 
-    void setLife(int life)
+    void setStamina(int stamina)
     {
-        this->life = life;
+        this->stamina = stamina;
     }
 
-    int getSex()
+    bool getSex()
     {
         return this->sex;
     }
 
-    void setSex(int sex)
+    void setSex(bool sex)
     {
         this->sex = sex;
     }
 
-    bool isStatus()
+    bool getBirth()
     {
-        return this->status;
+        return this->give_birth;
     }
 
-    void setStatus(bool status)
+    void setBirth(bool give_birth)
     {
-        this->status = status;
+        this->give_birth = give_birth;
+    }
+
+    bool isAlive()
+    {
+        return this->alive;
+    }
+
+    void setAlive(bool alive)
+    {
+        this->alive = alive;
     }
 
     bool isPrey()
@@ -191,6 +203,18 @@ public:
     void setPrey(bool prey)
     {
         this->prey = prey;
+    }
+
+    // getters
+    enum animal_type get_type()
+    {
+        return a_type;
+    }
+
+    // setters
+    void set_type(enum animal_type type)
+    {
+        a_type = type;
     }
 };
 
@@ -218,6 +242,10 @@ public:
     // getters
     int get_x();
     int get_y();
+    SDL_Surface *get_window_surface()
+    {
+        return window_surface_ptr_;
+    }
 
     // setters
     void set_x(int x);
@@ -260,18 +288,10 @@ public:
 class animal : public moving_object
 {
 private:
-    enum animal_type a_type;
-
 public:
     animal(const std::string &file_path, SDL_Surface *window_surface_ptr)
         : moving_object(file_path, window_surface_ptr){};
     virtual ~animal(){};
-
-    // getters
-    enum animal_type get_type();
-
-    // setters
-    void set_type(enum animal_type type);
 };
 
 /*
@@ -305,6 +325,7 @@ public:
 
     ~sheep()
     {}
+    void interact_with_object(std::shared_ptr<moving_object> obj);
     void move();
 };
 

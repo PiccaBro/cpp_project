@@ -13,6 +13,10 @@ wolf::wolf(const std::string &file, SDL_Surface *window_surface)
     set_type(WOLF);
     set_x_speed(5);
     set_y_speed(5);
+    setStamina(10);
+    setSex(false);
+    setAlive(true);
+    setPrey(false);
     // target.x = -1;
     // target.y = -1;
     // target_dist = 0;
