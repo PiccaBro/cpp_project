@@ -61,14 +61,12 @@ application::application(int argc, char *argv[])
         if (i < n_wolf)
             grd->add_object(std::make_unique<wolf>("../media/wolf.png",
                                                    window_surface_ptr_));
-
         if (i < n_dog)
             grd->add_object(
                 std::make_unique<dog>("../media/dog.png", window_surface_ptr_));
     }
     grd->add_object(std::make_unique<shepherd>("../media/shepherd.png",
                                                window_surface_ptr_));
-
     quit = loop(std::stoul(argv[argc - 1]) * 1000);
 }
 

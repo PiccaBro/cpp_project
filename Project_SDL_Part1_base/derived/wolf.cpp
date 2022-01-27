@@ -40,7 +40,7 @@ void wolf::move()
     // Walk as the beginning
     else
     {
-        */
+    */
 
     int x = get_x();
     int y = get_y();
@@ -56,6 +56,14 @@ void wolf::move()
     set_x(x + speed_x);
 
     //}
+}
+
+void wolf::interact_with_object(std::shared_ptr<moving_object> obj)
+{
+    auto d = distance(get_x(), get_y(), obj->get_x(), obj->get_y());
+    if (obj->isPrey() && d <= get_dist())
+    {
+    }
 }
 
 /*

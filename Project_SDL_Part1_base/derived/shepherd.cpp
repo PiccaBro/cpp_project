@@ -11,5 +11,10 @@ shepherd::shepherd(const std::string &file, SDL_Surface *window_surface)
 {
     set_rect(71, 67);
     set_x_speed(5);
+    set_type(SHEPHERD);
     set_y_speed(5);
+    setAlive(true);
+    setStamina(10);
+    setBirth(false);
+    setSex(false);
 }

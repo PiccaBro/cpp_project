@@ -12,6 +12,8 @@ moving_object::moving_object(const std::string &file_path,
 {
     x_speed = 0;
     y_speed = 0;
+    dist = frame_height + frame_width;
+    interact = NULL;
 }
 
 // GETTERS
@@ -23,6 +25,14 @@ int moving_object::get_y_speed()
 {
     return y_speed;
 }
+int moving_object::get_dist()
+{
+    return dist;
+}
+std::shared_ptr<moving_object> moving_object::get_interact()
+{
+    return interact;
+}
 
 // SETTERS
 void moving_object::set_x_speed(int speed)
@@ -32,4 +42,12 @@ void moving_object::set_x_speed(int speed)
 void moving_object::set_y_speed(int speed)
 {
     y_speed = speed;
+}
+void moving_object::set_dist(int d)
+{
+    dist = d;
+}
+void moving_object::set_interact(std::shared_ptr<moving_object> obj)
+{
+    interact = obj;
 }

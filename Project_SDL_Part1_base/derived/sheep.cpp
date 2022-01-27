@@ -24,12 +24,16 @@ sheep::sheep(const std::string &file, SDL_Surface *window_surface)
 
 void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
 {
-    // obj->getSex() ? std::cout << "FAMELE\n" : std::cout << "MALE\n";
+    if (getStamina() <= 0)
+    {
+        setAlive(false);
+    }
+    // obj->getSex() ? std::cout << "FEMALE\n" : std::cout << "MALE\n";
     if (get_type() == obj->get_type() && getSex() != obj->getSex()
         && getStamina() > 5 && obj->getStamina() > 5
         && distance(get_x(), get_y(), obj->get_x(), obj->get_y()) < 5)
     {
-        obj->setStamina(obj->getStamina() - 5);
+        obj->setStamina(obj->getStamina() - 10);
         setStamina(getStamina() - 5);
         setBirth(true);
     }

@@ -6,6 +6,7 @@ void playable_character::move()
     int y_speed = get_y_speed();
     int x = get_x();
     int y = get_y();
+
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {

@@ -12,6 +12,8 @@
 #include <math.h>
 #include <memory>
 #include <optional>
+#include <time.h>
+#include <unistd.h>
 #include <vector>
 
 // Classes
@@ -36,7 +38,8 @@ enum animal_type
 {
     SHEEP,
     WOLF,
-    DOG
+    DOG,
+    SHEPHERD
 };
 
 // helper function to initialize SDL
@@ -263,6 +266,8 @@ class moving_object : public rendered_object
 private:
     int x_speed;
     int y_speed;
+    int dist;
+    std::shared_ptr<moving_object> interact;
 
 public:
     moving_object(const std::string &file_path,
@@ -272,10 +277,14 @@ public:
     // getters
     int get_x_speed();
     int get_y_speed();
+    int get_dist();
+    std::shared_ptr<moving_object> get_interact();
 
     // setters
     void set_x_speed(int speed);
     void set_y_speed(int speed);
+    void set_dist(int dist);
+    void set_interact(std::shared_ptr<moving_object> obj);
     virtual void move(){};
 };
 
@@ -338,11 +347,14 @@ public:
 class wolf : public animal
 {
 private:
+    std::shared_ptr<moving_object> target;
+
 public:
     wolf(const std::string &file, SDL_Surface *window_surface);
 
     ~wolf()
     {}
+    void interact_with_object(std::shared_ptr<moving_object> obj);
     void move();
 };
 
@@ -355,9 +367,12 @@ public:
 class dog : public animal
 {
 private:
+    // std::shared_ptr<moving_object> shepherd;
+    float angle;
+
 public:
     dog(const std::string &file, SDL_Surface *window_surface);
-
+    void interact_with_object(std::shared_ptr<moving_object> obj);
     ~dog()
     {}
     void move();

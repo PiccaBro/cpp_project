@@ -34,21 +34,29 @@ void ground::update(SDL_Window *window_ptr)
 
     // sheeps update
 
-    for (std::shared_ptr<moving_object> s : moving_objects)
+    for (size_t i = 0; i < moving_objects.size(); i++)
     {
         // s->run_from_wolf(wolves);
-        s->move();
-        s->draw();
+        moving_objects[i]->move();
+        moving_objects[i]->draw();
         for (std::shared_ptr<moving_object> obj : moving_objects)
         {
-            s->interact_with_object(obj);
+            moving_objects[i]->interact_with_object(obj);
         }
-        if (s->getBirth() == true)
+        if (moving_objects[i]->getBirth() == true)
         {
-            moving_objects.push_back(std::make_unique<sheep>(
-                "../media/sheep.png", window_surface_ptr_));
+            std::shared_ptr<moving_object> new_s = std::make_unique<sheep>(
+                "../media/sheep.png", window_surface_ptr_);
+            new_s->set_x(moving_objects[i]->get_x());
+            new_s->set_y(moving_objects[i]->get_y());
+            moving_objects.push_back(new_s);
             std::cout << "BIRTH\n";
-            s->setBirth(false);
+            moving_objects[i]->setBirth(false);
+        }
+        if (!moving_objects[i]->isAlive())
+        {
+            moving_objects.erase(moving_objects.cbegin() + i);
+            std::cout << "REMOVED SHEEP\n";
         }
     }
 
