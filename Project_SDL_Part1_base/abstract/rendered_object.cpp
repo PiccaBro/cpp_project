@@ -24,10 +24,7 @@ rendered_object::~rendered_object()
 
 void rendered_object::draw()
 {
-    SDL_Rect r = rect;
-    r.x += rect.w / 2;
-    r.y += rect.h / 2;
-    SDL_BlitScaled(image_ptr_, NULL, window_surface_ptr_, &r);
+    SDL_BlitScaled(image_ptr_, NULL, window_surface_ptr_, &rect);
 }
 
 // GETTERS

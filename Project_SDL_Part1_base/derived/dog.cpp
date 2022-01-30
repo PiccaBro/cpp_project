@@ -34,18 +34,18 @@ void dog::interact_with_object(std::shared_ptr<moving_object> obj)
             angle = 0;
         float r_angle = angle * 3.14159 / 180;
 
+        const float c_angl = cos(r_angle);
+        const float s_angl = sin(r_angle);
+
+        // Handle bounderies with rotations
         if ((y < frame_boundary
-             && ((inc > 0 && cos(r_angle) < 0)
-                 || (inc < 0 && cos(r_angle) > 0)))
+             && ((inc > 0 && c_angl < 0) || (inc < 0 && c_angl > 0)))
             || (y > frame_height - frame_boundary
-                && ((inc > 0 && cos(r_angle) > 0)
-                    || (inc < 0 && cos(r_angle) < 0)))
+                && ((inc > 0 && c_angl > 0) || (inc < 0 && c_angl < 0)))
             || ((x < frame_boundary
-                 && ((inc < 0 && sin(r_angle) < 0)
-                     || (inc > 0 && sin(r_angle) > 0)))
+                 && ((inc < 0 && s_angl < 0) || (inc > 0 && s_angl > 0)))
                 || (x > frame_width - frame_boundary
-                    && ((inc < 0 && sin(r_angle) > 0)
-                        || (inc > 0 && sin(r_angle) < 0)))))
+                    && ((inc < 0 && s_angl > 0) || (inc > 0 && s_angl < 0)))))
             inc *= -1;
 
         angle += inc;
