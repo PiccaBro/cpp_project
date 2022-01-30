@@ -11,6 +11,7 @@ dog::dog(const std::string &file, SDL_Surface *window_surface)
 {
     set_rect(56, 62);
     setStamina(10);
+    setMaxStamina(10);
     setSex(false);
     setAlive(true);
     setPrey(false);

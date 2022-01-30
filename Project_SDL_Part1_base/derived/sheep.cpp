@@ -10,6 +10,7 @@ sheep::sheep(const std::string &file, SDL_Surface *window_surface)
     : animal(file, window_surface)
 {
     set_rect(71, 67);
+    setMaxStamina(10);
     setStamina(10);
     setSex(rand() % 2);
     setAlive(true);
@@ -24,17 +25,12 @@ sheep::sheep(const std::string &file, SDL_Surface *window_surface)
 
 void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
 {
-    if (getStamina() <= 0)
-    {
-        setAlive(false);
-    }
     // obj->getSex() ? std::cout << "FEMALE\n" : std::cout << "MALE\n";
-    if (get_type() == obj->get_type() && getSex() != obj->getSex()
-        && getStamina() > 5 && obj->getStamina() > 5
-        && distance(get_x(), get_y(), obj->get_x(), obj->get_y()) < 5)
+    if (getSex() && !obj->getSex() && get_type() == obj->get_type()
+        && getStamina() > 5
+        && distance(get_x(), get_y(), obj->get_x(), obj->get_y()) < 20)
     {
-        obj->setStamina(obj->getStamina() - 5);
-        setStamina(getStamina() - 5);
+        setStamina(0);
         setBirth(true);
     }
 }
@@ -54,6 +50,12 @@ void sheep::move()
         set_x_speed(speed_x * (-1));
     set_x(x + speed_x);
 
+    float stamina = getStamina();
+    if (stamina < getMaxStamina())
+    {
+        setStamina(stamina + 0.1);
+        // printf("sheep = %f\n", stamina);
+    }
     /*
     // Getters
     int x = get_x();

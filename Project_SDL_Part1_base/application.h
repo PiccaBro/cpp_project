@@ -147,8 +147,9 @@ public:
 class interacting_object
 {
 private:
-    int stamina; // 0-10
-    bool sex;
+    float stamina; // 0-10
+    float max_stamina; // 10
+    bool sex; // is female
     bool alive;
     bool prey;
     bool give_birth;
@@ -159,12 +160,19 @@ public:
     ~interacting_object(){};
 
     virtual void interact_with_object(std::shared_ptr<moving_object> obj){};
-    int getStamina()
+    float getStamina()
     {
         return this->stamina;
     }
-
-    void setStamina(int stamina)
+    float getMaxStamina()
+    {
+        return this->max_stamina;
+    }
+    void setMaxStamina(float max)
+    {
+        this->max_stamina = max;
+    }
+    void setStamina(float stamina)
     {
         this->stamina = stamina;
     }
