@@ -33,6 +33,7 @@ constexpr unsigned frame_width = 1400; // width of window in pixel
 constexpr unsigned frame_height = 900; // height of window in pixel
 constexpr unsigned frame_boundary =
     100; // minimal distance of animals to the border of the screen
+constexpr unsigned max_dist = frame_height + frame_width;
 
 enum animal_type
 {
@@ -264,6 +265,7 @@ public:
 class moving_object : public rendered_object
 {
 private:
+    int speed;
     int x_speed;
     int y_speed;
     int dist;
@@ -275,12 +277,14 @@ public:
     ~moving_object(){};
 
     // getters
+    int get_speed();
     int get_x_speed();
     int get_y_speed();
     int get_dist();
     std::shared_ptr<moving_object> get_interact();
 
     // setters
+    void set_speed(int speed);
     void set_x_speed(int speed);
     void set_y_speed(int speed);
     void set_dist(int dist);

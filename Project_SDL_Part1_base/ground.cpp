@@ -39,6 +39,7 @@ void ground::update(SDL_Window *window_ptr)
         // s->run_from_wolf(wolves);
         moving_objects[i]->move();
         moving_objects[i]->draw();
+        moving_objects[i]->set_dist(max_dist);
         for (std::shared_ptr<moving_object> obj : moving_objects)
         {
             moving_objects[i]->interact_with_object(obj);
@@ -53,6 +54,7 @@ void ground::update(SDL_Window *window_ptr)
             std::cout << "BIRTH\n";
             moving_objects[i]->setBirth(false);
         }
+
         if (!moving_objects[i]->isAlive())
         {
             moving_objects.erase(moving_objects.cbegin() + i);

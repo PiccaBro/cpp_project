@@ -11,8 +11,7 @@ wolf::wolf(const std::string &file, SDL_Surface *window_surface)
 {
     set_rect(42, 62);
     set_type(WOLF);
-    set_x_speed(5);
-    set_y_speed(5);
+    set_speed(8);
     setStamina(10);
     setSex(false);
     setAlive(true);
@@ -25,44 +24,43 @@ wolf::wolf(const std::string &file, SDL_Surface *window_surface)
 
 void wolf::move()
 {
+    set_x(get_x() + get_x_speed());
+    set_y(get_y() + get_y_speed());
     /*
-    int target_x = target.x;
-
-    // Hunt the closest sheep
-    if (target_x > -1)
-    {
-        int speed = get_speed();
-        int target_y = target.y;
-
-        set_x(x + (((target_x - x) * speed) / target_dist));
-        set_y(y + (((target_y - y) * speed) / target_dist));
-    }
-    // Walk as the beginning
-    else
-    {
-    */
-
-    int x = get_x();
-    int y = get_y();
-    int speed_x = get_x_speed();
-    int speed_y = get_y_speed();
-    if ((y < frame_boundary && speed_y < 0)
-        || (y > frame_height - frame_boundary && speed_y > 0))
-        set_y_speed(speed_y * (-1));
-    set_y(y + speed_y);
-    if ((x < frame_boundary && speed_x < 0)
-        || (x > frame_width - frame_boundary && speed_x > 0))
-        set_x_speed(speed_x * (-1));
-    set_x(x + speed_x);
-
-    //}
+        int x = get_x();
+        int y = get_y();
+        int speed_x = get_x_speed();
+        int speed_y = get_y_speed();
+        if ((y < frame_boundary && speed_y < 0)
+            || (y > frame_height - frame_boundary && speed_y > 0))
+            set_y_speed(speed_y * (-1));
+        set_y(y + speed_y);
+        if ((x < frame_boundary && speed_x < 0)
+            || (x > frame_width - frame_boundary && speed_x > 0))
+            set_x_speed(speed_x * (-1));
+        set_x(x + speed_x);
+        */
 }
 
 void wolf::interact_with_object(std::shared_ptr<moving_object> obj)
 {
+    int x = get_x();
+    int y = get_y();
+    int target_x = obj->get_x();
+    int target_y = obj->get_y();
+    int speed = get_speed();
     auto d = distance(get_x(), get_y(), obj->get_x(), obj->get_y());
     if (obj->isPrey() && d <= get_dist())
     {
+        if (d < 5)
+        {
+            obj->setAlive(false);
+            set_dist(max_dist);
+            return;
+        }
+        set_dist(d);
+        set_x_speed(((target_x - x) * speed) / d);
+        set_y_speed(((target_y - y) * speed) / d);
     }
 }
 
