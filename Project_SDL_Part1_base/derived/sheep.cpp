@@ -33,7 +33,7 @@ void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
         && getStamina() > 5 && obj->getStamina() > 5
         && distance(get_x(), get_y(), obj->get_x(), obj->get_y()) < 5)
     {
-        obj->setStamina(obj->getStamina() - 10);
+        obj->setStamina(obj->getStamina() - 5);
         setStamina(getStamina() - 5);
         setBirth(true);
     }

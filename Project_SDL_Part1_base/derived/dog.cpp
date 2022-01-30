@@ -16,7 +16,8 @@ dog::dog(const std::string &file, SDL_Surface *window_surface)
     setPrey(false);
     set_type(DOG);
 
-    angle = (rand() % 360) * ((rand() % 2 == 0) ? -1 : 1);
+    angle = (rand() * 10 % 360) * ((rand() % 2 == 0) ? -1 : 1);
+    inc = 5 * ((rand() % 2 == 0) ? -1 : 1);
 }
 
 void dog::interact_with_object(std::shared_ptr<moving_object> obj)
@@ -28,21 +29,30 @@ void dog::interact_with_object(std::shared_ptr<moving_object> obj)
         int x = get_x();
         int y = get_y();
         int radius = 100;
-        angle += 5;
+
+        if (angle == 360 || angle == -360)
+            angle = 0;
         float r_angle = angle * 3.14159 / 180;
 
-        if (angle == 360)
-            angle = 1;
+        if ((y < frame_boundary
+             && ((inc > 0 && cos(r_angle) < 0)
+                 || (inc < 0 && cos(r_angle) > 0)))
+            || (y > frame_height - frame_boundary
+                && ((inc > 0 && cos(r_angle) > 0)
+                    || (inc < 0 && cos(r_angle) < 0)))
+            || ((x < frame_boundary
+                 && ((inc < 0 && sin(r_angle) < 0)
+                     || (inc > 0 && sin(r_angle) > 0)))
+                || (x > frame_width - frame_boundary
+                    && ((inc < 0 && sin(r_angle) > 0)
+                        || (inc > 0 && sin(r_angle) < 0)))))
+            inc *= -1;
 
-        if ((x < frame_boundary) || (x > frame_height - frame_boundary))
-            set_x(t_x - cos(r_angle) * radius);
-        else
-            set_x(t_x + cos(r_angle) * radius);
+        angle += inc;
+        r_angle = angle * 3.14159 / 180;
 
-        if ((y < frame_boundary) || (y > frame_width - frame_boundary))
-            set_y(t_y - sin(r_angle) * radius);
-        else
-            set_y(t_y + sin(r_angle) * radius);
+        set_x(t_x + cos(r_angle) * radius);
+        set_y(t_y + sin(r_angle) * radius);
     }
     /*
     if (obj->get_type() == SHEPHERD)

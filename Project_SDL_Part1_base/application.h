@@ -373,6 +373,7 @@ class dog : public animal
 private:
     // std::shared_ptr<moving_object> shepherd;
     float angle;
+    int inc;
 
 public:
     dog(const std::string &file, SDL_Surface *window_surface);

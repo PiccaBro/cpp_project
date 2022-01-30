@@ -51,14 +51,14 @@ void ground::update(SDL_Window *window_ptr)
             new_s->set_x(moving_objects[i]->get_x());
             new_s->set_y(moving_objects[i]->get_y());
             moving_objects.push_back(new_s);
-            std::cout << "BIRTH\n";
+            // std::cout << "BIRTH\n";
             moving_objects[i]->setBirth(false);
         }
 
         if (!moving_objects[i]->isAlive())
         {
             moving_objects.erase(moving_objects.cbegin() + i);
-            std::cout << "REMOVED SHEEP\n";
+            //  std::cout << "REMOVED SHEEP\n";
         }
     }
 
