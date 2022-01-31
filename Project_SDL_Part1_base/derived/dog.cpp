@@ -15,6 +15,7 @@ dog::dog(const std::string &file, SDL_Surface *window_surface)
     setSex(false);
     setAlive(true);
     setPrey(false);
+    setPredator(true);
     set_type(DOG);
 
     angle = (rand() * 10 % 360) * ((rand() % 2 == 0) ? -1 : 1);

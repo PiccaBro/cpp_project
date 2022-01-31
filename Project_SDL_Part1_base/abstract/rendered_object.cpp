@@ -37,6 +37,16 @@ int rendered_object::get_y()
     return rect.y;
 }
 
+int rendered_object::get_h()
+{
+    return rect.h;
+}
+
+int rendered_object::get_w()
+{
+    return rect.w;
+}
+
 // SETTERS
 
 void rendered_object::set_x(int x)

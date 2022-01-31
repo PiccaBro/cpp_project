@@ -32,11 +32,8 @@ void ground::update(SDL_Window *window_ptr)
         < 0)
         printf("%s\n", SDL_GetError());
 
-    // sheeps update
-
     for (size_t i = 0; i < moving_objects.size(); i++)
     {
-        // s->run_from_wolf(wolves);
         moving_objects[i]->move();
         moving_objects[i]->draw();
         moving_objects[i]->set_dist(max_dist);
@@ -51,6 +48,7 @@ void ground::update(SDL_Window *window_ptr)
             new_s->set_x(moving_objects[i]->get_x());
             new_s->set_y(moving_objects[i]->get_y());
             new_s->setStamina(0);
+            new_s->set_rect(43, 40);
             moving_objects.push_back(new_s);
             // std::cout << "BIRTH\n";
             moving_objects[i]->setBirth(false);

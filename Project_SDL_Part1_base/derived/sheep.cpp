@@ -15,9 +15,11 @@ sheep::sheep(const std::string &file, SDL_Surface *window_surface)
     setSex(rand() % 2);
     setAlive(true);
     setPrey(true);
+    setPredator(false);
     setBirth(false);
     set_type(SHEEP);
     int speed = 5;
+    set_speed(speed);
     set_x_speed((rand() % speed) * ((rand() % 2 == 0) ? -1 : 1));
     set_y_speed(sqrt(pow(speed, 2) - pow(get_x_speed(), 2))
                 * ((rand() % 2 == 0) ? -1 : 1));
@@ -26,6 +28,39 @@ sheep::sheep(const std::string &file, SDL_Surface *window_surface)
 void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
 {
     // obj->getSex() ? std::cout << "FEMALE\n" : std::cout << "MALE\n";
+    if (obj->isPredator())
+    {
+        int x = get_x();
+        int y = get_y();
+        int hunt_x = obj->get_x();
+        int hunt_y = obj->get_y();
+        int speed = get_speed();
+
+        int d = distance(x, y, hunt_x, hunt_y);
+        if (d < 70 && d < get_dist())
+        {
+            set_dist(d);
+            int speed_x = get_x_speed();
+            int speed_y = get_y_speed();
+            if ((y <= frame_boundary && speed_y < 0)
+                || (y >= frame_height - frame_boundary && speed_y > 0))
+                hunt_y = y;
+            if ((x < frame_boundary && speed_x < 0)
+                || (x > frame_width - frame_boundary && speed_x > 0))
+                hunt_x = x;
+
+            if ((hunt_x < x && speed_x < 0) || (hunt_x > x && speed_x > 0))
+                speed_x *= -1;
+            if ((hunt_y < y && speed_y < 0) || (hunt_y > y && speed_y > 0))
+                speed_y *= -1;
+
+            speed_x = -((hunt_x - x) * speed * 1.5) / d;
+            speed_y = -((hunt_y - y) * speed * 1.5) / d;
+            set_x_speed(speed_x);
+            set_y_speed(speed_y);
+        }
+        return;
+    }
     if (getSex() && !obj->getSex() && get_type() == obj->get_type()
         && getStamina() > 5
         && distance(get_x(), get_y(), obj->get_x(), obj->get_y()) < 20)
@@ -41,8 +76,9 @@ void sheep::move()
     int y = get_y();
     int speed_x = get_x_speed();
     int speed_y = get_y_speed();
-    if ((y < frame_boundary && speed_y < 0)
-        || (y > frame_height - frame_boundary && speed_y > 0))
+
+    if ((y <= frame_boundary && speed_y < 0)
+        || (y >= frame_height - frame_boundary && speed_y > 0))
         set_y_speed(speed_y * (-1));
     set_y(y + speed_y);
     if ((x < frame_boundary && speed_x < 0)
@@ -56,6 +92,18 @@ void sheep::move()
         setStamina(stamina + 0.1);
         // printf("sheep = %f\n", stamina);
     }
+    // grow
+    int h = get_h();
+    int w = get_w();
+    if (h < 71 || w < 67)
+    {
+        if (w < 67)
+            w++;
+        if (h < 71)
+            h++;
+        set_rect(h, w);
+    }
+
     /*
     // Getters
     int x = get_x();

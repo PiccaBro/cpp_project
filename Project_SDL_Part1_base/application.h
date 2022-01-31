@@ -7,11 +7,17 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL_image.h>
+#include <algorithm>
+#include <cassert>
+#include <cstdlib>
 #include <iostream>
 #include <map>
 #include <math.h>
 #include <memory>
+#include <numeric>
 #include <optional>
+#include <random>
+#include <string>
 #include <time.h>
 #include <unistd.h>
 #include <vector>
@@ -152,6 +158,7 @@ private:
     bool sex; // is female
     bool alive;
     bool prey;
+    bool predator;
     bool give_birth;
     enum animal_type a_type;
 
@@ -217,6 +224,16 @@ public:
         this->prey = prey;
     }
 
+    bool isPredator()
+    {
+        return this->predator;
+    }
+
+    void setPredator(bool predator)
+    {
+        this->predator = predator;
+    }
+
     // getters
     enum animal_type get_type()
     {
@@ -254,6 +271,8 @@ public:
     // getters
     int get_x();
     int get_y();
+    int get_h();
+    int get_w();
     SDL_Surface *get_window_surface()
     {
         return window_surface_ptr_;

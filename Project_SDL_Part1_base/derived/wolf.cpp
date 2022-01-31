@@ -17,6 +17,7 @@ wolf::wolf(const std::string &file, SDL_Surface *window_surface)
     setSex(false);
     setAlive(true);
     setPrey(false);
+    setPredator(true);
     // target.x = -1;
     // target.y = -1;
     // target_dist = 0;
