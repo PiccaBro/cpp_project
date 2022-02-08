@@ -1,12 +1,5 @@
 ﻿#include "application.h"
 
-#include <algorithm>
-#include <cassert>
-#include <cstdlib>
-#include <numeric>
-#include <random>
-#include <string>
-
 using namespace std;
 /*
   +=====================================================+
@@ -44,7 +37,7 @@ application::application(int argc, char *argv[])
     window_surface_ptr_ = SDL_GetWindowSurface(window_ptr_);
     if (window_surface_ptr_ == NULL)
         printf("Create Surface failed\n");
-
+    
     // init ground
     grd = std::make_unique<ground>(window_surface_ptr_);
 

@@ -14,6 +14,7 @@ moving_object::moving_object(const std::string &file_path,
     x_speed = 0;
     y_speed = 0;
     dist = max_dist;
+    hunted = false;
     interact = NULL;
 }
 
@@ -33,6 +34,10 @@ int moving_object::get_y_speed()
 int moving_object::get_dist()
 {
     return dist;
+}
+bool moving_object::is_hunted()
+{
+    return hunted;
 }
 std::shared_ptr<moving_object> moving_object::get_interact()
 {
@@ -55,6 +60,10 @@ void moving_object::set_y_speed(int speed)
 void moving_object::set_dist(int d)
 {
     dist = d;
+}
+void moving_object::set_hunted(bool hunted)
+{
+    this->hunted = hunted;
 }
 void moving_object::set_interact(std::shared_ptr<moving_object> obj)
 {

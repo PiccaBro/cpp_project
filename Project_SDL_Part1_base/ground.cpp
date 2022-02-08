@@ -37,6 +37,7 @@ void ground::update(SDL_Window *window_ptr)
         moving_objects[i]->move();
         moving_objects[i]->draw();
         moving_objects[i]->set_dist(max_dist);
+        moving_objects[i]->set_hunted(false);
         for (std::shared_ptr<moving_object> obj : moving_objects)
         {
             moving_objects[i]->interact_with_object(obj);

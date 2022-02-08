@@ -296,6 +296,7 @@ private:
     int x_speed;
     int y_speed;
     int dist;
+    bool hunted;
     std::shared_ptr<moving_object> interact;
 
 public:
@@ -308,6 +309,7 @@ public:
     int get_x_speed();
     int get_y_speed();
     int get_dist();
+    bool is_hunted();
     std::shared_ptr<moving_object> get_interact();
 
     // setters
@@ -315,6 +317,7 @@ public:
     void set_x_speed(int speed);
     void set_y_speed(int speed);
     void set_dist(int dist);
+    void set_hunted(bool hunted);
     void set_interact(std::shared_ptr<moving_object> obj);
     virtual void move(){};
 };
