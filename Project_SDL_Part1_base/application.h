@@ -153,8 +153,8 @@ public:
 class interacting_object
 {
 private:
-    float stamina; // 0-10
-    float max_stamina; // 10
+    int stamina; // 0-10
+    int max_stamina; // 10
     bool sex; // is female
     bool alive;
     bool prey;
@@ -167,21 +167,22 @@ public:
     ~interacting_object(){};
 
     virtual void interact_with_object(std::shared_ptr<moving_object> obj){};
-    float getStamina()
+    int getStamina()
     {
         return this->stamina;
     }
-    float getMaxStamina()
+    int getMaxStamina()
     {
         return this->max_stamina;
     }
-    void setMaxStamina(float max)
+    void setMaxStamina(int max)
     {
         this->max_stamina = max;
     }
-    void setStamina(float stamina)
+    void setStamina(int stamina, bool random)
     {
-        this->stamina = stamina;
+        if (!(random && rand() % 5))
+            this->stamina = stamina;
     }
 
     bool getSex()
@@ -281,7 +282,7 @@ public:
     // setters
     void set_x(int x);
     void set_y(int y);
-    void set_rect(unsigned h, unsigned w);
+    void set_rect(unsigned h, unsigned w, bool random);
 };
 
 /*
@@ -401,7 +402,6 @@ public:
 class dog : public animal
 {
 private:
-    // std::shared_ptr<moving_object> shepherd;
     float angle;
     int inc;
 

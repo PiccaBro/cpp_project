@@ -9,8 +9,8 @@
 dog::dog(const std::string &file, SDL_Surface *window_surface)
     : animal(file, window_surface)
 {
-    set_rect(56, 62);
-    setStamina(10);
+    set_rect(56, 62, false);
+    setStamina(10, false);
     setMaxStamina(10);
     setSex(false);
     setAlive(true);

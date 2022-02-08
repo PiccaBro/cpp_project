@@ -9,9 +9,9 @@
 sheep::sheep(const std::string &file, SDL_Surface *window_surface)
     : animal(file, window_surface)
 {
-    set_rect(71, 67);
+    set_rect(71, 67, false);
     setMaxStamina(10);
-    setStamina(10);
+    setStamina(10, false);
     setSex(rand() % 2);
     setAlive(true);
     setPrey(true);
@@ -71,7 +71,7 @@ void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
         && getStamina() == getMaxStamina()
         && distance(get_x(), get_y(), obj->get_x(), obj->get_y()) < 20)
     {
-        setStamina(0);
+        setStamina(0, false);
         setBirth(true);
     }
 }
@@ -112,9 +112,10 @@ void sheep::move()
     set_x(hunted ? (boundary_x ? x : x + speed_x * boost) : x + speed_x);
     set_y(hunted ? (boundary_y ? y : y + speed_y * boost) : y + speed_y);
 
-    float stamina = getStamina();
+    int stamina = getStamina();
     if (stamina < getMaxStamina())
-        setStamina(stamina + 0.1);
+        setStamina(++stamina, true);
+
     // grow
     int h = get_h();
     int w = get_w();
@@ -124,6 +125,6 @@ void sheep::move()
             w++;
         if (h < 71)
             h++;
-        set_rect(h, w);
+        set_rect(h, w, true);
     }
 }

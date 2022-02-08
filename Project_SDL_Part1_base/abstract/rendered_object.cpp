@@ -57,8 +57,11 @@ void rendered_object::set_y(int y)
 {
     rect.y = y;
 }
-void rendered_object::set_rect(unsigned h, unsigned w)
+void rendered_object::set_rect(unsigned h, unsigned w, bool random)
 {
-    rect.h = h;
-    rect.w = w;
+    if (!(random && rand() % 4))
+    {
+        rect.h = h;
+        rect.w = w;
+    }
 }

@@ -48,8 +48,8 @@ void ground::update(SDL_Window *window_ptr)
                 "../media/sheep.png", window_surface_ptr_);
             new_s->set_x(moving_objects[i]->get_x());
             new_s->set_y(moving_objects[i]->get_y());
-            new_s->setStamina(0);
-            new_s->set_rect(43, 40);
+            new_s->setStamina(0, false);
+            new_s->set_rect(43, 40, false);
             moving_objects.push_back(new_s);
             // std::cout << "BIRTH\n";
             moving_objects[i]->setBirth(false);

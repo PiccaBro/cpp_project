@@ -9,14 +9,14 @@
 shepherd::shepherd(const std::string &file, SDL_Surface *window_surface)
     : playable_character(file, window_surface)
 {
-    set_rect(71, 67);
+    set_rect(71, 67, false);
     set_x_speed(5);
     set_type(SHEPHERD);
     set_y_speed(5);
     setAlive(true);
     setPrey(false);
     setPredator(false);
-    setStamina(10);
+    setStamina(10, false);
     setMaxStamina(10);
     setBirth(false);
     setSex(false);
