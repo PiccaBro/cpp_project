@@ -40,7 +40,14 @@ void wolf::interact_with_object(std::shared_ptr<moving_object> obj)
     int target_y = obj->get_y();
     int speed = get_speed();
     auto d = distance(get_x(), get_y(), obj->get_x(), obj->get_y());
-    if (obj->isPrey() && d <= get_dist())
+    if (obj->get_type() == DOG && d < 100 && d <= get_dist())
+    {
+        set_hunted(true);
+        set_x_speed(-((target_x - x) * speed) / d);
+        set_y_speed(-((target_y - y) * speed) / d);
+        return;
+    }
+    if (obj->isPrey() && d <= get_dist() && !is_hunted())
     {
         if (d < 5)
         {
