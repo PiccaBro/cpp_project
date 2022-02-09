@@ -42,7 +42,7 @@ void ground::update(SDL_Window *window_ptr)
         {
             moving_objects[i]->interact_with_object(obj);
         }
-        if (moving_objects[i]->getBirth() == true)
+        if (moving_objects[i]->getBirth())
         {
             std::shared_ptr<moving_object> new_s = std::make_unique<sheep>(
                 "../media/sheep.png", window_surface_ptr_);

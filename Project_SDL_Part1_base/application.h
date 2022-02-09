@@ -181,7 +181,7 @@ public:
     }
     void setStamina(int stamina, bool random)
     {
-        if (!(random && rand() % 5))
+        if (!(random && rand() % 6))
             this->stamina = stamina;
     }
 

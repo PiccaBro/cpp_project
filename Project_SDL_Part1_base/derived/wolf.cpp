@@ -12,8 +12,8 @@ wolf::wolf(const std::string &file, SDL_Surface *window_surface)
     set_rect(42, 62, false);
     set_type(WOLF);
     set_speed(6);
-    setStamina(20, false);
-    setMaxStamina(20);
+    setStamina(200, false);
+    setMaxStamina(200);
     setSex(false);
     setAlive(true);
     setPrey(false);
@@ -40,7 +40,7 @@ void wolf::interact_with_object(std::shared_ptr<moving_object> obj)
     int target_y = obj->get_y();
     int speed = get_speed();
     auto d = distance(get_x(), get_y(), obj->get_x(), obj->get_y());
-    if (obj->get_type() == DOG && d < 100 && d <= get_dist())
+    if (obj->get_type() == DOG && d < 200 && d <= get_dist())
     {
         set_hunted(true);
         set_x_speed(-((target_x - x) * speed) / d);
