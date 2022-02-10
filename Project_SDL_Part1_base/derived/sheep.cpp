@@ -48,14 +48,10 @@ void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
 
             if ((x < frame_boundary && speed_x < 0)
                 || (x > frame_width - frame_boundary && speed_x > 0))
-            {
                 boundary_x = true;
-            }
             if ((y <= frame_boundary && speed_y < 0)
                 || (y >= frame_height - frame_boundary && speed_y > 0))
-            {
                 boundary_y = true;
-            }
 
             if (!boundary_x)
                 speed_x = -((hunt_x - x) * speed) / d;

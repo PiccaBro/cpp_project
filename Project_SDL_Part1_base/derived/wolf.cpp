@@ -29,7 +29,7 @@ void wolf::move()
 
     int stamina = getStamina();
     if (stamina > 0)
-        setStamina(--stamina, true);
+        setStamina(stamina - 1, true);
     else
         setAlive(false);
 }
@@ -41,7 +41,7 @@ void wolf::interact_with_object(std::shared_ptr<moving_object> obj)
     int target_x = obj->get_x();
     int target_y = obj->get_y();
     int speed = get_speed();
-    auto d = distance(get_x(), get_y(), obj->get_x(), obj->get_y());
+    int d = distance(get_x(), get_y(), obj->get_x(), obj->get_y());
     if (obj->get_type() == DOG && d < 200 && d <= get_dist())
     {
         set_hunted(true);
