@@ -18,7 +18,7 @@ dog::dog(const std::string &file, SDL_Renderer *renderer)
     setPredator(false);
     set_type(DOG);
 
-    angle = (rand() * 10 % 360) * ((rand() % 2 == 0) ? -1 : 1);
+    angle = (rand() % 360);
     inc = 5 * ((rand() % 2 == 0) ? -1 : 1);
 }
 
