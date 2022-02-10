@@ -6,12 +6,12 @@
   +=====================================================+
 */
 
-sheep::sheep(const std::string &file, SDL_Surface *window_surface)
-    : animal(file, window_surface)
+sheep::sheep(const std::string &file, SDL_Renderer *renderer)
+    : animal(file, renderer)
 {
     set_rect(71, 67, false);
     setMaxStamina(10);
-    setStamina(10, false);
+    setStamina(5, false);
     setSex(rand() % 2);
     setAlive(true);
     setPrey(true);

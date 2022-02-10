@@ -32,14 +32,11 @@ void init()
 application::application(int argc, char *argv[])
 {
     // create the application window
-    window_ptr_ =
+    window =
         SDL_CreateWindow("The Happy Farm", 0, 0, frame_width, frame_height, 0);
-    window_surface_ptr_ = SDL_GetWindowSurface(window_ptr_);
-    if (window_surface_ptr_ == NULL)
-        printf("Create Surface failed\n");
-    
-    // init ground
-    grd = std::make_unique<ground>(window_surface_ptr_);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+    grd = std::make_unique<ground>(renderer);
 
     // init animal count
     this->n_sheep = atoi(argv[1]);
@@ -49,27 +46,24 @@ application::application(int argc, char *argv[])
     for (size_t i = 0; i < max(max(n_sheep, n_wolf), n_sheep); i++)
     {
         if (i < n_sheep)
-            grd->add_object(std::make_unique<sheep>("../media/sheep.png",
-                                                    window_surface_ptr_));
+            grd->add_object(
+                std::make_unique<sheep>("../media/sheep.png", renderer));
         if (i < n_wolf)
-            grd->add_object(std::make_unique<wolf>("../media/wolf.png",
-                                                   window_surface_ptr_));
+            grd->add_object(
+                std::make_unique<wolf>("../media/wolf.png", renderer));
         if (i < n_dog)
             grd->add_object(
-                std::make_unique<dog>("../media/dog.png", window_surface_ptr_));
+                std::make_unique<dog>("../media/dog.png", renderer));
     }
-    grd->add_object(std::make_unique<shepherd>("../media/shepherd.png",
-                                               window_surface_ptr_));
+    grd->add_object(
+        std::make_unique<shepherd>("../media/shepherd.png", renderer));
     quit = loop(std::stoul(argv[argc - 1]) * 1000);
 }
 
 application::~application()
 {
-    if (window_surface_ptr_ == NULL)
-        std::cout << "ERROR ptr is NULL\n";
-    if (window_surface_ptr_ == NULL)
-        std::cout << "ERROR \n";
-    SDL_DestroyWindow(window_ptr_);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
 }
 
 int application::loop(unsigned period)
@@ -82,7 +76,7 @@ int application::loop(unsigned period)
         currentTime = SDL_GetTicks();
         if (currentTime > lastTime + frame_rate)
         {
-            grd->update(window_ptr_);
+            grd->update(window);
             SDL_Delay(frame_time);
             lastTime = currentTime;
         }

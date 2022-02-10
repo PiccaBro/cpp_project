@@ -6,10 +6,10 @@
   +=====================================================+
 */
 
-wolf::wolf(const std::string &file, SDL_Surface *window_surface)
-    : animal(file, window_surface)
+wolf::wolf(const std::string &file, SDL_Renderer *renderer)
+    : animal(file, renderer)
 {
-    set_rect(42, 62, false);
+    set_rect(63, 93, false);
     set_type(WOLF);
     set_speed(6);
     setStamina(200, false);

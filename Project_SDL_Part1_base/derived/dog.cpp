@@ -6,8 +6,8 @@
   +=====================================================+
 */
 
-dog::dog(const std::string &file, SDL_Surface *window_surface)
-    : animal(file, window_surface)
+dog::dog(const std::string &file, SDL_Renderer *renderer)
+    : animal(file, renderer)
 {
     set_rect(56, 62, false);
     setStamina(10, false);
@@ -52,8 +52,8 @@ void dog::interact_with_object(std::shared_ptr<moving_object> obj)
         angle += inc;
         r_angle = angle * 3.14159 / 180;
 
-        set_x(t_x + cos(r_angle) * radius);
-        set_y(t_y + sin(r_angle) * radius);
+        set_x(t_x + cos(r_angle) * radius + obj->get_w() / 4);
+        set_y(t_y + sin(r_angle) * radius + obj->get_h() / 3);
     }
 }
 

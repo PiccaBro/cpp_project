@@ -6,10 +6,10 @@
   +=====================================================+
 */
 
-ground::ground(SDL_Surface *window_surface_ptr)
+ground::ground(SDL_Renderer *renderer)
 {
     // Filling the surface with green color
-    this->window_surface_ptr_ = window_surface_ptr;
+    this->renderer = renderer;
 }
 
 ground::~ground()
@@ -27,10 +27,12 @@ void ground::add_object(std::shared_ptr<moving_object> moving_object)
 
 void ground::update(SDL_Window *window_ptr)
 {
-    if (SDL_FillRect(window_surface_ptr_, NULL,
-                     SDL_MapRGB(window_surface_ptr_->format, 50, 188, 50))
-        < 0)
-        printf("%s\n", SDL_GetError());
+    /* if (SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 50, 188, 50))
+         < 0)
+         printf("%s\n", SDL_GetError());*/
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 50, 188, 50, 255);
+    SDL_RenderFillRect(renderer, NULL);
 
     for (size_t i = 0; i < moving_objects.size(); i++)
     {
@@ -44,8 +46,8 @@ void ground::update(SDL_Window *window_ptr)
         }
         if (moving_objects[i]->getBirth())
         {
-            std::shared_ptr<moving_object> new_s = std::make_unique<sheep>(
-                "../media/sheep.png", window_surface_ptr_);
+            std::shared_ptr<moving_object> new_s =
+                std::make_unique<sheep>("../media/sheep.png", renderer);
             new_s->set_x(moving_objects[i]->get_x());
             new_s->set_y(moving_objects[i]->get_y());
             new_s->setStamina(0, false);
@@ -61,7 +63,8 @@ void ground::update(SDL_Window *window_ptr)
             // std::cout << "REMOVED SHEEP\n";
         }
     }
-
-    if (SDL_UpdateWindowSurface(window_ptr) < 0)
-        printf("Update Surface failed\n");
+    SDL_RenderPresent(renderer);
+    /*
+        if (SDL_UpdateWindowSurface(window_ptr) < 0)
+            printf("Update Surface failed\n");*/
 }

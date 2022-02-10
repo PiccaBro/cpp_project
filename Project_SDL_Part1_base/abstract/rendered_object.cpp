@@ -7,24 +7,23 @@
 */
 
 rendered_object::rendered_object(const std::string &file_path,
-                                 SDL_Surface *window_surface_ptr)
+                                 SDL_Renderer *renderer)
 {
-    image_ptr_ = load_surface_for(file_path, window_surface_ptr);
-    window_surface_ptr_ = window_surface_ptr;
-
-    // initial position of the rendered_object
     rect.x = (rand() % (frame_width - (2 * frame_boundary))) + frame_boundary;
     rect.y = (rand() % (frame_height - (2 * frame_boundary))) + frame_boundary;
+    this->renderer = renderer;
+    texture = IMG_LoadTexture(renderer, file_path.c_str());
+    SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
 }
 
 rendered_object::~rendered_object()
 {
-    SDL_FreeSurface(image_ptr_);
+    SDL_DestroyTexture(texture);
 }
 
 void rendered_object::draw()
 {
-    SDL_BlitScaled(image_ptr_, NULL, window_surface_ptr_, &rect);
+    SDL_RenderCopy(renderer, texture, NULL, &rect);
 }
 
 // GETTERS

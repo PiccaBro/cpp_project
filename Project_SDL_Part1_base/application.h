@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdlib>
+#include <err.h>
 #include <iostream>
 #include <map>
 #include <math.h>
@@ -64,21 +65,6 @@ namespace
     // Its purpose is to indicate to the compiler that everything
     // inside of it is UNIQUELY used within this source file.
 
-    SDL_Surface *load_surface_for(const std::string &path,
-                                  SDL_Surface *window_surface_ptr)
-    {
-        // Helper function to load a png for a specific surface
-        SDL_Surface *loaded_surface = IMG_Load(path.c_str());
-        if (!loaded_surface)
-            printf("IMG_Load: %s\n", IMG_GetError());
-
-        SDL_Surface *optimized_surface =
-            SDL_ConvertSurface(loaded_surface, window_surface_ptr->format, 0);
-        if (!optimized_surface)
-            printf("SDL_ConvertSurface: %s\n", SDL_GetError());
-        return optimized_surface;
-    }
-
     int distance(int x1, int y1, int x2, int y2)
     {
         return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
@@ -96,8 +82,9 @@ class application
 {
 private:
     // the following are OWNING ptrs
-    SDL_Window *window_ptr_;
-    SDL_Surface *window_surface_ptr_;
+    SDL_Window *window;
+    SDL_Renderer *renderer;
+    SDL_Texture *texture;
 
     int quit;
     unsigned n_sheep;
@@ -131,11 +118,11 @@ public:
 class ground
 {
 private:
-    SDL_Surface *window_surface_ptr_; // NON-OWNING ptr, again to the screen
+    SDL_Renderer *renderer;
     std::vector<std::shared_ptr<moving_object>> moving_objects;
 
 public:
-    ground(SDL_Surface *window_surface_ptr);
+    ground(SDL_Renderer *renderer);
     ~ground();
     void update(SDL_Window *window); // refresh the screen : move & draw animals
 
@@ -256,28 +243,24 @@ public:
 class rendered_object : public interacting_object
 {
 private:
-    SDL_Surface *window_surface_ptr_; // surface on which the rendered_object is
-                                      // drawn (non-owning)
-    SDL_Surface
-        *image_ptr_; // texture of the rendered_object (the loaded image)
+    SDL_Texture *texture;
+    SDL_Renderer *renderer;
     SDL_Rect rect;
 
 public:
-    rendered_object(const std::string &file_path,
-                    SDL_Surface *window_surface_ptr);
+    rendered_object(const std::string &file_path, SDL_Renderer *renderer);
     ~rendered_object();
-    void
-    draw(); // draw the rendered_object on the screen <-> window_surface_ptr.
+    void draw(); // draw the rendered_object on the screen <-> surface_win.
 
     // getters
     int get_x();
     int get_y();
     int get_h();
     int get_w();
-    SDL_Surface *get_window_surface()
+    /*SDL_Surface *get_window_surface()
     {
-        return window_surface_ptr_;
-    }
+        return surface_win;
+    }*/
 
     // setters
     void set_x(int x);
@@ -301,8 +284,7 @@ private:
     std::shared_ptr<moving_object> interact;
 
 public:
-    moving_object(const std::string &file_path,
-                  SDL_Surface *window_surface_ptr);
+    moving_object(const std::string &file_path, SDL_Renderer *renderer);
     ~moving_object(){};
 
     // getters
@@ -311,7 +293,6 @@ public:
     int get_y_speed();
     int get_dist();
     bool is_hunted();
-    std::shared_ptr<moving_object> get_interact();
 
     // setters
     void set_speed(int speed);
@@ -319,7 +300,6 @@ public:
     void set_y_speed(int speed);
     void set_dist(int dist);
     void set_hunted(bool hunted);
-    void set_interact(std::shared_ptr<moving_object> obj);
     virtual void move(){};
 };
 
@@ -333,8 +313,8 @@ class animal : public moving_object
 {
 private:
 public:
-    animal(const std::string &file_path, SDL_Surface *window_surface_ptr)
-        : moving_object(file_path, window_surface_ptr){};
+    animal(const std::string &file_path, SDL_Renderer *renderer)
+        : moving_object(file_path, renderer){};
     virtual ~animal(){};
 };
 
@@ -348,9 +328,8 @@ class playable_character : public moving_object
 {
 private:
 public:
-    playable_character(const std::string &file_path,
-                       SDL_Surface *window_surface_ptr)
-        : moving_object(file_path, window_surface_ptr){};
+    playable_character(const std::string &file_path, SDL_Renderer *renderer)
+        : moving_object(file_path, renderer){};
     ~playable_character(){};
     void move();
 };
@@ -365,7 +344,7 @@ class sheep : public animal
 {
 private:
 public:
-    sheep(const std::string &file, SDL_Surface *window_surface);
+    sheep(const std::string &file, SDL_Renderer *renderer);
 
     ~sheep()
     {}
@@ -385,7 +364,7 @@ private:
     std::shared_ptr<moving_object> target;
 
 public:
-    wolf(const std::string &file, SDL_Surface *window_surface);
+    wolf(const std::string &file, SDL_Renderer *renderer);
 
     ~wolf()
     {}
@@ -406,7 +385,7 @@ private:
     int inc;
 
 public:
-    dog(const std::string &file, SDL_Surface *window_surface);
+    dog(const std::string &file, SDL_Renderer *renderer);
     void interact_with_object(std::shared_ptr<moving_object> obj);
     ~dog()
     {}
@@ -423,7 +402,7 @@ class shepherd : public playable_character
 {
 private:
 public:
-    shepherd(const std::string &file, SDL_Surface *window_surface);
+    shepherd(const std::string &file, SDL_Renderer *renderer);
 
     ~shepherd(){};
 };

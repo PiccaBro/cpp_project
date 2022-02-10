@@ -7,8 +7,8 @@
 */
 
 moving_object::moving_object(const std::string &file_path,
-                             SDL_Surface *window_surface_ptr)
-    : rendered_object(file_path, window_surface_ptr)
+                             SDL_Renderer *renderer)
+    : rendered_object(file_path, renderer)
 {
     speed = 0;
     x_speed = 0;
@@ -39,10 +39,6 @@ bool moving_object::is_hunted()
 {
     return hunted;
 }
-std::shared_ptr<moving_object> moving_object::get_interact()
-{
-    return interact;
-}
 
 // SETTERS
 void moving_object::set_speed(int speed)
@@ -64,8 +60,4 @@ void moving_object::set_dist(int d)
 void moving_object::set_hunted(bool hunted)
 {
     this->hunted = hunted;
-}
-void moving_object::set_interact(std::shared_ptr<moving_object> obj)
-{
-    interact = obj;
 }
