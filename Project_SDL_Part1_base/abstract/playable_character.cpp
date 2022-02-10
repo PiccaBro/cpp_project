@@ -18,11 +18,13 @@ void playable_character::move()
         {
         case SDLK_q:
         case SDLK_LEFT:
+            set_flip(SDL_FLIP_NONE);
             if (x > frame_boundary)
                 set_x(get_x() - x_speed);
             break;
         case SDLK_d:
         case SDLK_RIGHT:
+            set_flip(SDL_FLIP_HORIZONTAL);
             if (x < frame_width - frame_boundary)
                 set_x(get_x() + x_speed);
             break;

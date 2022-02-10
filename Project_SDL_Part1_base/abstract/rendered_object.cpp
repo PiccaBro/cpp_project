@@ -11,6 +11,7 @@ rendered_object::rendered_object(const std::string &file_path,
 {
     rect.x = (rand() % (frame_width - (2 * frame_boundary))) + frame_boundary;
     rect.y = (rand() % (frame_height - (2 * frame_boundary))) + frame_boundary;
+    flip = SDL_FLIP_NONE;
     this->renderer = renderer;
     texture = IMG_LoadTexture(renderer, file_path.c_str());
     SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
@@ -23,7 +24,8 @@ rendered_object::~rendered_object()
 
 void rendered_object::draw()
 {
-    SDL_RenderCopy(renderer, texture, NULL, &rect);
+    // SDL_RenderCopy(renderer, texture, NULL, &rect);
+    SDL_RenderCopyEx(renderer, texture, NULL, &rect, 0, NULL, flip);
 }
 
 // GETTERS
@@ -63,4 +65,8 @@ void rendered_object::set_rect(unsigned h, unsigned w, bool random)
         rect.h = h;
         rect.w = w;
     }
+}
+void rendered_object::set_flip(SDL_RendererFlip flip)
+{
+    this->flip = flip;
 }

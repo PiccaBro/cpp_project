@@ -22,7 +22,9 @@ wolf::wolf(const std::string &file, SDL_Renderer *renderer)
 
 void wolf::move()
 {
-    set_x(get_x() + get_x_speed());
+    int speed_x = get_x_speed();
+    set_flip((speed_x < 0) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+    set_x(get_x() + speed_x);
     set_y(get_y() + get_y_speed());
 
     int stamina = getStamina();

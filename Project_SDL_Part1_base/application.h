@@ -246,6 +246,7 @@ private:
     SDL_Texture *texture;
     SDL_Renderer *renderer;
     SDL_Rect rect;
+    SDL_RendererFlip flip;
 
 public:
     rendered_object(const std::string &file_path, SDL_Renderer *renderer);
@@ -266,6 +267,7 @@ public:
     void set_x(int x);
     void set_y(int y);
     void set_rect(unsigned h, unsigned w, bool random);
+    void set_flip(SDL_RendererFlip flip);
 };
 
 /*
