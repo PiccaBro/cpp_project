@@ -306,6 +306,10 @@ public:
     void set_dist(int dist);
     void set_hunted(bool hunted);
     virtual void move(){};
+    virtual std::shared_ptr<moving_object> bear(SDL_Renderer *renderer)
+    {
+        return nullptr;
+    };
 };
 
 /*
@@ -355,6 +359,7 @@ public:
     {}
     void interact_with_object(std::shared_ptr<moving_object> obj);
     void move();
+    std::shared_ptr<moving_object> bear(SDL_Renderer *renderer);
 };
 
 /*

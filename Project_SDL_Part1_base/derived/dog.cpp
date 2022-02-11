@@ -13,6 +13,7 @@ dog::dog(const std::string &file, SDL_Renderer *renderer)
     setStamina(10, false);
     setMaxStamina(10);
     setSex(false);
+    setBirth(false);
     setAlive(true);
     setPrey(false);
     setPredator(false);
@@ -39,7 +40,7 @@ void dog::interact_with_object(std::shared_ptr<moving_object> obj)
         const float c = cos(r_angle);
         const float s = sin(r_angle);
 
-        // Handle bounderies with rotations
+        // Handle boundaries with rotations
         if ((y < frame_boundary && ((inc > 0 && c < 0) || (inc < 0 && c > 0)))
             || (y > frame_height - frame_boundary
                 && ((inc > 0 && c > 0) || (inc < 0 && c < 0)))
@@ -51,6 +52,7 @@ void dog::interact_with_object(std::shared_ptr<moving_object> obj)
 
         angle += inc;
         r_angle = angle * 3.14159 / 180;
+        // Handle flip depending on direction
         set_flip(((inc > 0 && s > 0) || (inc < 0 && s < 0))
                      ? SDL_FLIP_NONE
                      : SDL_FLIP_HORIZONTAL);

@@ -10,8 +10,8 @@ sheep::sheep(const std::string &file, SDL_Renderer *renderer)
     : animal(file, renderer)
 {
     set_rect(71, 67, false);
-    setMaxStamina(10);
-    setStamina(5, false);
+    setMaxStamina(20);
+    setStamina(20, false);
     setSex(rand() % 2);
     setAlive(true);
     setPrey(true);
@@ -48,8 +48,8 @@ void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
         }
         return;
     }
-    if (getSex() && !obj->getSex() && get_type() == obj->get_type()
-        && getStamina() == getMaxStamina()
+    if (!is_hunted() && getSex() && !obj->getSex()
+        && get_type() == obj->get_type() && getStamina() == getMaxStamina()
         && distance(get_x(), get_y(), obj->get_x(), obj->get_y()) < 20)
     {
         setStamina(0, false);
@@ -64,12 +64,10 @@ void sheep::move()
     bool hunted = is_hunted();
     int speed_x = get_x_speed();
     int speed_y = get_y_speed();
-    bool boundary_y = false;
-    bool boundary_x = false;
     float boost = 1.25;
 
-    boundary_x = ((x < frame_boundary && speed_x < 0)
-                  || (x > frame_width - frame_boundary && speed_x > 0));
+    bool boundary_x = ((x < frame_boundary && speed_x < 0)
+                       || (x > frame_width - frame_boundary && speed_x > 0));
 
     if (!hunted && boundary_x)
     {
@@ -77,8 +75,8 @@ void sheep::move()
         set_x_speed(speed_x);
     }
 
-    boundary_y = ((y <= frame_boundary && speed_y < 0)
-                  || (y >= frame_height - frame_boundary && speed_y > 0));
+    bool boundary_y = ((y <= frame_boundary && speed_y < 0)
+                       || (y >= frame_height - frame_boundary && speed_y > 0));
 
     if (!hunted && boundary_y)
     {
@@ -91,7 +89,7 @@ void sheep::move()
 
     int stamina = getStamina();
     if (stamina < getMaxStamina())
-        setStamina(++stamina, true);
+        setStamina(stamina + 1, true);
 
     // grow
     int h = get_h();
@@ -104,4 +102,15 @@ void sheep::move()
             h++;
         set_rect(h, w, true);
     }
+}
+
+std::shared_ptr<moving_object> sheep::bear(SDL_Renderer *renderer)
+{
+    std::shared_ptr<moving_object> new_s =
+        std::make_unique<sheep>("../media/sheep.png", renderer);
+    new_s->set_x(get_x());
+    new_s->set_y(get_y());
+    new_s->setStamina(0, false);
+    new_s->set_rect(43, 40, false);
+    return new_s;
 }

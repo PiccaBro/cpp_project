@@ -12,9 +12,10 @@ wolf::wolf(const std::string &file, SDL_Renderer *renderer)
     set_rect(63, 93, false);
     set_type(WOLF);
     set_speed(6);
-    setStamina(200, false);
-    setMaxStamina(200);
+    setStamina(30, false);
+    setMaxStamina(30);
     setSex(false);
+    setBirth(false);
     setAlive(true);
     setPrey(false);
     setPredator(true);
@@ -22,10 +23,22 @@ wolf::wolf(const std::string &file, SDL_Renderer *renderer)
 
 void wolf::move()
 {
+    int x = get_x();
+    int y = get_y();
     int speed_x = get_x_speed();
+    int speed_y = get_y_speed();
+    bool hunted = is_hunted();
+
+    bool boundary_x = ((x < frame_boundary && speed_x < 0)
+                       || (x > frame_width - frame_boundary && speed_x > 0));
+
+    bool boundary_y = ((y <= frame_boundary && speed_y < 0)
+                       || (y >= frame_height - frame_boundary && speed_y > 0));
+
+    set_x(hunted && boundary_x ? x : x + speed_x);
+    set_y(hunted && boundary_y ? y : y + speed_y);
+
     set_flip((speed_x < 0) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
-    set_x(get_x() + speed_x);
-    set_y(get_y() + get_y_speed());
 
     int stamina = getStamina();
     if (stamina > 0)

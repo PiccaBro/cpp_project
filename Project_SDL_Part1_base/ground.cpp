@@ -38,22 +38,17 @@ void ground::update(SDL_Window *window_ptr)
     {
         moving_objects[i]->move();
         moving_objects[i]->draw();
+
         moving_objects[i]->set_dist(max_dist);
         moving_objects[i]->set_hunted(false);
         for (std::shared_ptr<moving_object> obj : moving_objects)
-        {
             moving_objects[i]->interact_with_object(obj);
-        }
+
         if (moving_objects[i]->getBirth())
         {
-            std::shared_ptr<moving_object> new_s =
-                std::make_unique<sheep>("../media/sheep.png", renderer);
-            new_s->set_x(moving_objects[i]->get_x());
-            new_s->set_y(moving_objects[i]->get_y());
-            new_s->setStamina(0, false);
-            new_s->set_rect(43, 40, false);
-            moving_objects.push_back(new_s);
-            // std::cout << "BIRTH\n";
+            std::shared_ptr<moving_object> new_obj =
+                moving_objects[i]->bear(renderer);
+            moving_objects.push_back(new_obj);
             moving_objects[i]->setBirth(false);
         }
 
