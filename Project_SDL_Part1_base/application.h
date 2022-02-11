@@ -259,16 +259,12 @@ public:
     void draw(); // draw the rendered_object on the screen <-> surface_win.
 
     // getters
-    int get_x();
-    int get_y();
-    int get_h();
-    int get_w();
+    void get_xy(int *x, int *y);
+    void get_dim(int *h, int *w);
+    void get_bounds(bool *x, bool *y);
 
     // setters
-    void set_x(int x);
-    void set_y(int y);
-    bool get_bound_x();
-    bool get_bound_y();
+    void set_xy(int x, int y);
     void set_rect(unsigned h, unsigned w, bool random);
     void set_flip(SDL_RendererFlip flip);
 };
@@ -284,8 +280,12 @@ private:
     int speed;
     int x_speed;
     int y_speed;
+    SDL_Point target;
     int dist;
     bool hunted;
+    bool choosen;
+    bool ordered;
+    bool go_back;
     std::shared_ptr<moving_object> interact;
 
 public:
@@ -293,18 +293,23 @@ public:
     ~moving_object(){};
 
     // getters
-    int get_speed();
-    int get_x_speed();
-    int get_y_speed();
+    void get_speed(int *speed);
+    void get_xy_speed(int *x, int *y);
+    void get_target(SDL_Point *target);
     int get_dist();
     bool is_hunted();
+    bool is_choosen();
+    bool is_ordered();
+    bool is_going_back();
 
     // setters
     void set_speed(int speed);
-    void set_x_speed(int speed);
-    void set_y_speed(int speed);
+    void set_xy_speed(int speed_x, int speed_y);
     void set_dist(int dist);
     void set_hunted(bool hunted);
+    void set_choosen(bool choosen);
+    void set_target(int x, int y);
+    void set_go_back(int x, int y);
     virtual void move(){};
     virtual std::shared_ptr<moving_object> bear(SDL_Renderer *renderer)
     {
@@ -416,6 +421,7 @@ class shepherd : public playable_character
 private:
 public:
     shepherd(const std::string &file, SDL_Renderer *renderer);
-
-    ~shepherd(){};
+    void interact_with_object(std::shared_ptr<moving_object> obj);
+    ~shepherd()
+    {}
 };

@@ -13,24 +13,31 @@ moving_object::moving_object(const std::string &file_path,
     speed = 0;
     x_speed = 0;
     y_speed = 0;
+    SDL_Point target;
     dist = max_dist;
     hunted = false;
     interact = NULL;
+    choosen = false;
+    ordered = false;
+    go_back = false;
 }
 
 // GETTERS
-int moving_object::get_speed()
+void moving_object::get_speed(int *speed)
 {
-    return speed;
+    *speed = this->speed;
 }
-int moving_object::get_x_speed()
+void moving_object::get_xy_speed(int *speed_x, int *speed_y)
 {
-    return x_speed;
+    *speed_x = x_speed;
+    *speed_y = y_speed;
 }
-int moving_object::get_y_speed()
+
+void moving_object::get_target(SDL_Point *target)
 {
-    return y_speed;
+    *target = this->target;
 }
+
 int moving_object::get_dist()
 {
     return dist;
@@ -40,19 +47,32 @@ bool moving_object::is_hunted()
     return hunted;
 }
 
+bool moving_object::is_choosen()
+{
+    return choosen;
+}
+
+bool moving_object::is_ordered()
+{
+    return ordered;
+}
+
+bool moving_object::is_going_back()
+{
+    return go_back;
+}
+
 // SETTERS
 void moving_object::set_speed(int speed)
 {
     this->speed = speed;
 }
-void moving_object::set_x_speed(int speed)
+void moving_object::set_xy_speed(int speed_x, int speed_y)
 {
-    x_speed = speed;
+    x_speed = speed_x;
+    y_speed = speed_y;
 }
-void moving_object::set_y_speed(int speed)
-{
-    y_speed = speed;
-}
+
 void moving_object::set_dist(int d)
 {
     dist = d;
@@ -60,4 +80,23 @@ void moving_object::set_dist(int d)
 void moving_object::set_hunted(bool hunted)
 {
     this->hunted = hunted;
+}
+
+void moving_object::set_choosen(bool choosen)
+{
+    this->choosen = choosen;
+}
+
+void moving_object::set_target(int x, int y)
+{
+    target.x = x;
+    target.y = y;
+    ordered = x > 0;
+}
+
+void moving_object::set_go_back(int x, int y)
+{
+    target.x = x;
+    target.y = y;
+    go_back = x > 0;
 }

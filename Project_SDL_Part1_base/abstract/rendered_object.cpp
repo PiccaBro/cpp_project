@@ -31,38 +31,27 @@ void rendered_object::draw()
 }
 
 // GETTERS
-int rendered_object::get_x()
+void rendered_object::get_xy(int *x, int *y)
 {
-    return rect.x;
-}
-int rendered_object::get_y()
-{
-    return rect.y;
+    *x = rect.x;
+    *y = rect.y;
 }
 
-int rendered_object::get_h()
+void rendered_object::get_dim(int *h, int *w)
 {
-    return rect.h;
+    *h = rect.h;
+    *w = rect.w;
 }
 
-int rendered_object::get_w()
+void rendered_object::get_bounds(bool *bound_x, bool *bound_y)
 {
-    return rect.w;
-}
-
-bool rendered_object::get_bound_x()
-{
-    return bound_x;
-}
-
-bool rendered_object::get_bound_y()
-{
-    return bound_y;
+    *bound_x = this->bound_x;
+    *bound_y = this->bound_y;
 }
 
 // SETTERS
 
-void rendered_object::set_x(int x)
+void rendered_object::set_xy(int x, int y)
 {
     if (x < frame_boundary)
     {
@@ -77,9 +66,6 @@ void rendered_object::set_x(int x)
     else
         bound_x = false;
     rect.x = x;
-}
-void rendered_object::set_y(int y)
-{
     if (y < frame_boundary)
     {
         bound_y = true;
@@ -94,6 +80,7 @@ void rendered_object::set_y(int y)
         bound_y = false;
     rect.y = y;
 }
+
 void rendered_object::set_rect(unsigned h, unsigned w, bool random)
 {
     if (!(random && rand() % 4))
