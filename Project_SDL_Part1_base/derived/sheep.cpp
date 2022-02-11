@@ -18,12 +18,13 @@ sheep::sheep(const std::string &file, SDL_Renderer *renderer)
     setPredator(false);
     setBirth(false);
     set_type(SHEEP);
-    int speed = 5;
+    int speed = 4 + rand() % 2;
     set_speed(speed);
+    boost = 1.25;
     set_hunted(false);
-    set_x_speed((rand() % speed) * ((rand() % 2 == 0) ? -1 : 1));
+    set_x_speed((rand() % speed) * ((rand() % 2) ? -1 : 1));
     set_y_speed(sqrt(pow(speed, 2) - pow(get_x_speed(), 2))
-                * ((rand() % 2 == 0) ? -1 : 1));
+                * ((rand() % 2) ? -1 : 1));
 }
 
 void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
@@ -35,9 +36,6 @@ void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
         int hunt_x = obj->get_x();
         int hunt_y = obj->get_y();
         int speed = get_speed();
-        bool boundary_x = false;
-        bool boundary_y = false;
-        float boost = 1.25;
 
         int d = distance(x, y, hunt_x, hunt_y);
         if (d < 200 && d <= get_dist())
@@ -59,20 +57,20 @@ void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
 }
 void sheep::move()
 {
-    int x = get_x();
-    int y = get_y();
-    int speed = get_speed();
     bool hunted = is_hunted();
     int speed_x = get_x_speed();
     int speed_y = get_y_speed();
 
-    set_x(x + speed_x);
-    if (!hunted && get_bound_x())
-        set_x_speed(speed_x * -1);
+    set_x(get_x() + speed_x);
+    set_y(get_y() + speed_y);
 
-    set_y(y + speed_y);
-    if (!hunted && get_bound_y())
-        set_y_speed(speed_y * -1);
+    if (!hunted)
+    {
+        if (get_bound_x())
+            set_x_speed(speed_x * -1);
+        if (get_bound_y())
+            set_y_speed(speed_y * -1);
+    }
 
     int stamina = getStamina();
     if (stamina < getMaxStamina())

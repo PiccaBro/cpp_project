@@ -11,7 +11,7 @@ wolf::wolf(const std::string &file, SDL_Renderer *renderer)
 {
     set_rect(63, 93, false);
     set_type(WOLF);
-    set_speed(6);
+    set_speed(5 + rand() % 2);
     setStamina(30, false);
     setMaxStamina(30);
     setSex(false);

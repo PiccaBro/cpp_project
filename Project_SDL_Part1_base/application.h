@@ -352,6 +352,8 @@ public:
 class sheep : public animal
 {
 private:
+    float boost;
+
 public:
     sheep(const std::string &file, SDL_Renderer *renderer);
 
@@ -391,8 +393,9 @@ public:
 class dog : public animal
 {
 private:
-    int angle;
-    int inc;
+    int angle; // current angle (0-360)
+    int inc; // speed and direction of rotation
+    int radius; // distance with the shepherd
 
 public:
     dog(const std::string &file, SDL_Renderer *renderer);
