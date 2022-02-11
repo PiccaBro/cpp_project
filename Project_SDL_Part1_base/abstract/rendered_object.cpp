@@ -11,6 +11,8 @@ rendered_object::rendered_object(const std::string &file_path,
 {
     rect.x = (rand() % (frame_width - (2 * frame_boundary))) + frame_boundary;
     rect.y = (rand() % (frame_height - (2 * frame_boundary))) + frame_boundary;
+    bound_x = false;
+    bound_y = false;
     flip = SDL_FLIP_NONE;
     this->renderer = renderer;
     texture = IMG_LoadTexture(renderer, file_path.c_str());
@@ -48,14 +50,48 @@ int rendered_object::get_w()
     return rect.w;
 }
 
+bool rendered_object::get_bound_x()
+{
+    return bound_x;
+}
+
+bool rendered_object::get_bound_y()
+{
+    return bound_y;
+}
+
 // SETTERS
 
 void rendered_object::set_x(int x)
 {
+    if (x < frame_boundary)
+    {
+        bound_x = true;
+        x = frame_boundary;
+    }
+    else if (x > frame_width - frame_boundary)
+    {
+        bound_x = true;
+        x = frame_width - frame_boundary;
+    }
+    else
+        bound_x = false;
     rect.x = x;
 }
 void rendered_object::set_y(int y)
 {
+    if (y < frame_boundary)
+    {
+        bound_y = true;
+        y = frame_boundary;
+    }
+    else if (y > frame_height - frame_boundary)
+    {
+        bound_y = true;
+        y = frame_height - frame_boundary;
+    }
+    else
+        bound_y = false;
     rect.y = y;
 }
 void rendered_object::set_rect(unsigned h, unsigned w, bool random)

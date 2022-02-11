@@ -250,6 +250,8 @@ private:
     SDL_Renderer *renderer;
     SDL_Rect rect;
     SDL_RendererFlip flip;
+    bool bound_x;
+    bool bound_y;
 
 public:
     rendered_object(const std::string &file_path, SDL_Renderer *renderer);
@@ -261,14 +263,12 @@ public:
     int get_y();
     int get_h();
     int get_w();
-    /*SDL_Surface *get_window_surface()
-    {
-        return surface_win;
-    }*/
 
     // setters
     void set_x(int x);
     void set_y(int y);
+    bool get_bound_x();
+    bool get_bound_y();
     void set_rect(unsigned h, unsigned w, bool random);
     void set_flip(SDL_RendererFlip flip);
 };
@@ -391,7 +391,7 @@ public:
 class dog : public animal
 {
 private:
-    float angle;
+    int angle;
     int inc;
 
 public:

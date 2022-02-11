@@ -43,7 +43,7 @@ application::application(int argc, char *argv[])
     this->n_wolf = atoi(argv[2]);
     this->n_dog = atoi(argv[3]);
 
-    for (size_t i = 0; i < max(max(n_sheep, n_wolf), n_sheep); i++)
+    for (size_t i = 0; i < max(max(n_sheep, n_wolf), n_dog); i++)
     {
         if (i < n_sheep)
             grd->add_object(

@@ -23,22 +23,10 @@ wolf::wolf(const std::string &file, SDL_Renderer *renderer)
 
 void wolf::move()
 {
-    int x = get_x();
-    int y = get_y();
-    int speed_x = get_x_speed();
-    int speed_y = get_y_speed();
-    bool hunted = is_hunted();
+    set_x(get_x() + get_x_speed());
+    set_y(get_y() + get_y_speed());
 
-    bool boundary_x = ((x < frame_boundary && speed_x < 0)
-                       || (x > frame_width - frame_boundary && speed_x > 0));
-
-    bool boundary_y = ((y <= frame_boundary && speed_y < 0)
-                       || (y >= frame_height - frame_boundary && speed_y > 0));
-
-    set_x(hunted && boundary_x ? x : x + speed_x);
-    set_y(hunted && boundary_y ? y : y + speed_y);
-
-    set_flip((speed_x < 0) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+    set_flip((get_x_speed() < 0) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 
     int stamina = getStamina();
     if (stamina > 0)
@@ -55,7 +43,7 @@ void wolf::interact_with_object(std::shared_ptr<moving_object> obj)
     int target_y = obj->get_y();
     int speed = get_speed();
     int d = distance(get_x(), get_y(), obj->get_x(), obj->get_y());
-    if (obj->get_type() == DOG && d < 200 && d <= get_dist())
+    if (obj->get_type() == DOG && d < 100 && d <= get_dist())
     {
         set_hunted(true);
         set_x_speed(-((target_x - x) * speed) / d);

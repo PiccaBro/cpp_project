@@ -33,22 +33,11 @@ void dog::interact_with_object(std::shared_ptr<moving_object> obj)
         int y = get_y();
         int radius = 100;
 
-        if (angle == 360 || angle == -360)
-            angle = 0;
+        angle %= 360;
         float r_angle = angle * 3.14159 / 180;
 
         const float c = cos(r_angle);
         const float s = sin(r_angle);
-
-        // Handle boundaries with rotations
-        if ((y < frame_boundary && ((inc > 0 && c < 0) || (inc < 0 && c > 0)))
-            || (y > frame_height - frame_boundary
-                && ((inc > 0 && c > 0) || (inc < 0 && c < 0)))
-            || ((x < frame_boundary
-                 && ((inc < 0 && s < 0) || (inc > 0 && s > 0)))
-                || (x > frame_width - frame_boundary
-                    && ((inc < 0 && s > 0) || (inc > 0 && s < 0)))))
-            inc *= -1;
 
         angle += inc;
         r_angle = angle * 3.14159 / 180;

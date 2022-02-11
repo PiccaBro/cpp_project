@@ -37,14 +37,15 @@ void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
         int speed = get_speed();
         bool boundary_x = false;
         bool boundary_y = false;
+        float boost = 1.25;
 
         int d = distance(x, y, hunt_x, hunt_y);
         if (d < 200 && d <= get_dist())
         {
             set_dist(d);
             set_hunted(true);
-            set_x_speed(-((hunt_x - x) * speed) / d);
-            set_y_speed(-((hunt_y - y) * speed) / d);
+            set_x_speed(-((hunt_x - x) * speed * boost) / d);
+            set_y_speed(-((hunt_y - y) * speed * boost) / d);
         }
         return;
     }
@@ -64,28 +65,14 @@ void sheep::move()
     bool hunted = is_hunted();
     int speed_x = get_x_speed();
     int speed_y = get_y_speed();
-    float boost = 1.25;
 
-    bool boundary_x = ((x < frame_boundary && speed_x < 0)
-                       || (x > frame_width - frame_boundary && speed_x > 0));
+    set_x(x + speed_x);
+    if (!hunted && get_bound_x())
+        set_x_speed(speed_x * -1);
 
-    if (!hunted && boundary_x)
-    {
-        speed_x *= -1;
-        set_x_speed(speed_x);
-    }
-
-    bool boundary_y = ((y <= frame_boundary && speed_y < 0)
-                       || (y >= frame_height - frame_boundary && speed_y > 0));
-
-    if (!hunted && boundary_y)
-    {
-        speed_y *= -1;
-        set_y_speed(speed_y);
-    }
-
-    set_x(hunted ? (boundary_x ? x : x + speed_x * boost) : x + speed_x);
-    set_y(hunted ? (boundary_y ? y : y + speed_y * boost) : y + speed_y);
+    set_y(y + speed_y);
+    if (!hunted && get_bound_y())
+        set_y_speed(speed_y * -1);
 
     int stamina = getStamina();
     if (stamina < getMaxStamina())
