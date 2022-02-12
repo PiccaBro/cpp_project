@@ -26,7 +26,7 @@ void wolf::move()
     int x, y, speed_x, speed_y;
     get_xy(&x, &y);
     get_xy_speed(&speed_x, &speed_y);
-    set_xy(x + speed_x, y + speed_y);
+    set_xy(x + speed_x, y + speed_y, true);
 
     set_flip((speed_x < 0) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 

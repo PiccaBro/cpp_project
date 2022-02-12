@@ -49,7 +49,7 @@ void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
     }
     if (!is_hunted() && getSex() && !obj->getSex()
         && get_type() == obj->get_type() && getStamina() == getMaxStamina()
-        && distance(x, y, hunt_x, hunt_y) < 20)
+        && distance(x, y, hunt_x, hunt_y) < 30)
     {
         setStamina(0, false);
         setBirth(true);
@@ -62,7 +62,7 @@ void sheep::move()
     get_xy(&x, &y);
     get_xy_speed(&speed_x, &speed_y);
 
-    set_xy(x + speed_x, y + speed_y);
+    set_xy(x + speed_x, y + speed_y, true);
     get_bounds(&bound_x, &bound_y);
 
     if (!hunted)
@@ -96,7 +96,7 @@ std::shared_ptr<moving_object> sheep::bear(SDL_Renderer *renderer)
         std::make_unique<sheep>("../media/sheep.png", renderer);
     int x, y;
     get_xy(&x, &y);
-    new_s->set_xy(x, y);
+    new_s->set_xy(x, y, true);
     new_s->setStamina(0, false);
     new_s->set_rect(43, 40, false);
     return new_s;

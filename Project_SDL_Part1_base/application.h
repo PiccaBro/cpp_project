@@ -7,9 +7,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL_image.h>
+#include <SDL_test_font.h>
 #include <algorithm>
 #include <cassert>
 #include <cstdlib>
+#include <cstring>
 #include <err.h>
 #include <iostream>
 #include <map>
@@ -87,7 +89,7 @@ private:
     // the following are OWNING ptrs
     SDL_Window *window;
     SDL_Renderer *renderer;
-    SDL_Texture *texture;
+    SDL_Texture *score_texture;
 
     int quit;
     unsigned n_sheep;
@@ -122,15 +124,18 @@ class ground
 {
 private:
     SDL_Renderer *renderer;
+    std::vector<std::shared_ptr<rendered_object>> score;
     std::vector<std::shared_ptr<moving_object>> moving_objects;
 
 public:
-    ground(SDL_Renderer *renderer);
+    ground(SDL_Renderer *renderer,
+           std::vector<std::shared_ptr<rendered_object>> score);
     ~ground();
     void update(SDL_Window *window); // refresh the screen : move & draw animals
 
     // other methods
     void add_object(std::shared_ptr<moving_object>);
+    void draw_score(size_t n_sheep);
     std::vector<std::shared_ptr<moving_object>> get_objects();
 };
 
@@ -264,7 +269,7 @@ public:
     void get_bounds(bool *x, bool *y);
 
     // setters
-    void set_xy(int x, int y);
+    void set_xy(int x, int y, bool bounded);
     void set_rect(unsigned h, unsigned w, bool random);
     void set_flip(SDL_RendererFlip flip);
 };

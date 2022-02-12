@@ -36,12 +36,25 @@ application::application(int argc, char *argv[])
         SDL_CreateWindow("The Happy Farm", 0, 0, frame_width, frame_height, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    grd = std::make_unique<ground>(renderer);
-
     // init animal count
     this->n_sheep = atoi(argv[1]);
     this->n_wolf = atoi(argv[2]);
     this->n_dog = atoi(argv[3]);
+
+    std::vector<shared_ptr<rendered_object>> score;
+    for (size_t i = 0; i < 10; i++)
+    {
+        string path = "../media/" + to_string(i) + ".png";
+        std::cout << path << std::endl;
+        score.push_back(std::make_unique<rendered_object>(path, renderer));
+        score[i]->set_rect(40, 25, false);
+    }
+    score.push_back(
+        std::make_unique<rendered_object>("../media/score.png", renderer));
+    score[10]->set_rect(40, 160, false);
+    score[10]->set_xy(50, 50, false);
+
+    grd = std::make_unique<ground>(renderer, score);
 
     for (size_t i = 0; i < max(max(n_sheep, n_wolf), n_dog); i++)
     {
@@ -62,6 +75,7 @@ application::application(int argc, char *argv[])
 
 application::~application()
 {
+    SDL_DestroyTexture(score_texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 }

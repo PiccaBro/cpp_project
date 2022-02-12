@@ -47,7 +47,7 @@ void dog::interact_with_object(std::shared_ptr<moving_object> obj)
                      : SDL_FLIP_HORIZONTAL);
 
         set_xy(x + cos(r_angle) * radius + w / 4,
-               y + sin(r_angle) * radius + h / 3);
+               y + sin(r_angle) * radius + h / 3, true);
     }
 }
 
@@ -76,6 +76,6 @@ void dog::move()
         int speed_x = ((target.x - x) * speed) / d;
         int speed_y = ((target.y - y) * speed) / d;
         set_flip((speed_x < 0) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
-        set_xy(x + speed_x, y + speed_y);
+        set_xy(x + speed_x, y + speed_y, true);
     }
 }

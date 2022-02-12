@@ -18,20 +18,20 @@ void playable_character::move()
         case SDLK_q:
         case SDLK_LEFT:
             set_flip(SDL_FLIP_NONE);
-            set_xy(x - speed_x, y);
+            set_xy(x - speed_x, y, true);
             break;
         case SDLK_d:
         case SDLK_RIGHT:
             set_flip(SDL_FLIP_HORIZONTAL);
-            set_xy(x + speed_x, y);
+            set_xy(x + speed_x, y, true);
             break;
         case SDLK_z:
         case SDLK_UP:
-            set_xy(x, y - speed_y);
+            set_xy(x, y - speed_y, true);
             break;
         case SDLK_s:
         case SDLK_DOWN:
-            set_xy(x, y + speed_y);
+            set_xy(x, y + speed_y, true);
             break;
         default:
             break;

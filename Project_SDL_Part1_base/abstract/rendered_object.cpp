@@ -51,33 +51,39 @@ void rendered_object::get_bounds(bool *bound_x, bool *bound_y)
 
 // SETTERS
 
-void rendered_object::set_xy(int x, int y)
+void rendered_object::set_xy(int x, int y, bool bounded)
 {
-    if (x < frame_boundary)
+    if (bounded)
     {
-        bound_x = true;
-        x = frame_boundary;
+        if (x < frame_boundary)
+        {
+            bound_x = true;
+            x = frame_boundary;
+        }
+        else if (x > frame_width - frame_boundary)
+        {
+            bound_x = true;
+            x = frame_width - frame_boundary;
+        }
+        else
+            bound_x = false;
     }
-    else if (x > frame_width - frame_boundary)
-    {
-        bound_x = true;
-        x = frame_width - frame_boundary;
-    }
-    else
-        bound_x = false;
     rect.x = x;
-    if (y < frame_boundary)
+    if (bounded)
     {
-        bound_y = true;
-        y = frame_boundary;
+        if (y < frame_boundary)
+        {
+            bound_y = true;
+            y = frame_boundary;
+        }
+        else if (y > frame_height - frame_boundary)
+        {
+            bound_y = true;
+            y = frame_height - frame_boundary;
+        }
+        else
+            bound_y = false;
     }
-    else if (y > frame_height - frame_boundary)
-    {
-        bound_y = true;
-        y = frame_height - frame_boundary;
-    }
-    else
-        bound_y = false;
     rect.y = y;
 }
 
