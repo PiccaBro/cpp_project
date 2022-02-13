@@ -1,5 +1,10 @@
 #include "../application.h"
 
+/**
+ * @brief
+ *
+ * @return int
+ */
 int interacting_object::getStamina()
 {
     return this->stamina;
