@@ -11,6 +11,13 @@ void playable_character::move()
     {
         if (event.type == SDL_QUIT)
             exit(0);
+        if (event.type == SDL_MOUSEBUTTONDOWN
+            && event.button.button == SDL_BUTTON_LEFT)
+        {
+            SDL_GetMouseState(&x, &y);
+            set_click(x, y);
+            continue;
+        }
         if (event.type != SDL_KEYDOWN)
             continue;
         switch (event.key.keysym.sym)

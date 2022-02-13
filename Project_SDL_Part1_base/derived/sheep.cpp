@@ -10,8 +10,8 @@ sheep::sheep(const std::string &file, SDL_Renderer *renderer)
     : animal(file, renderer)
 {
     set_rect(71, 67, false);
-    setMaxStamina(20);
-    setStamina(20, false);
+    setMaxStamina(30);
+    setStamina(30, false);
     setSex(rand() % 2);
     setAlive(true);
     setPrey(true);

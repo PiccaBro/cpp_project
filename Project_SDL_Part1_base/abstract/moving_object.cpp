@@ -13,13 +13,13 @@ moving_object::moving_object(const std::string &file_path,
     speed = 0;
     x_speed = 0;
     y_speed = 0;
-    SDL_Point target;
     dist = max_dist;
     hunted = false;
     interact = NULL;
     choosen = false;
     ordered = false;
     go_back = false;
+    click = { -1, -1 };
 }
 
 // GETTERS
@@ -31,11 +31,6 @@ void moving_object::get_xy_speed(int *speed_x, int *speed_y)
 {
     *speed_x = x_speed;
     *speed_y = y_speed;
-}
-
-void moving_object::get_target(SDL_Point *target)
-{
-    *target = this->target;
 }
 
 int moving_object::get_dist()
@@ -60,6 +55,11 @@ bool moving_object::is_ordered()
 bool moving_object::is_going_back()
 {
     return go_back;
+}
+void moving_object::get_click(int *x, int *y)
+{
+    *x = click.x;
+    *y = click.y;
 }
 
 // SETTERS
@@ -87,16 +87,19 @@ void moving_object::set_choosen(bool choosen)
     this->choosen = choosen;
 }
 
-void moving_object::set_target(int x, int y)
+void moving_object::set_ordered(bool ordered)
 {
-    target.x = x;
-    target.y = y;
-    ordered = x > 0;
+    this->ordered = ordered;
 }
 
 void moving_object::set_go_back(int x, int y)
 {
-    target.x = x;
-    target.y = y;
+    click.x = x;
+    click.y = y;
     go_back = x > 0;
+}
+void moving_object::set_click(int x, int y)
+{
+    click.x = x;
+    click.y = y;
 }

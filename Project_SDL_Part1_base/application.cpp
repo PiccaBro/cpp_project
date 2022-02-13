@@ -45,7 +45,6 @@ application::application(int argc, char *argv[])
     for (size_t i = 0; i < 10; i++)
     {
         string path = "../media/" + to_string(i) + ".png";
-        std::cout << path << std::endl;
         score.push_back(std::make_unique<rendered_object>(path, renderer));
         score[i]->set_rect(40, 25, false);
     }

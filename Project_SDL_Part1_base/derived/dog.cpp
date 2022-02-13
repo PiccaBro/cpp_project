@@ -13,7 +13,7 @@ dog::dog(const std::string &file, SDL_Renderer *renderer)
     setStamina(10, false);
     setMaxStamina(10);
     setSex(false);
-    set_speed(5 + rand() % 2);
+    set_speed(7 + rand() % 2);
     setBirth(false);
     setAlive(true);
     setPrey(false);
@@ -27,7 +27,7 @@ dog::dog(const std::string &file, SDL_Renderer *renderer)
 
 void dog::interact_with_object(std::shared_ptr<moving_object> obj)
 {
-    if (!is_ordered() && obj->get_type() == SHEPHERD)
+    if (!is_ordered() && !is_going_back() && obj->get_type() == SHEPHERD)
     {
         int x, y, h, w;
         obj->get_xy(&x, &y);
@@ -53,21 +53,26 @@ void dog::interact_with_object(std::shared_ptr<moving_object> obj)
 
 void dog::move()
 {
-    int x, y, speed, d;
+    int x, y, h, w, speed, limit, d;
     SDL_Point target;
     get_xy(&x, &y);
-    get_target(&target);
-    d = distance(x, y, target.x, target.y);
-    if (is_ordered() && d < 5)
+    get_dim(&h, &w);
+    get_click(&target.x, &target.y);
+
+    d = distance(x + w / 2, y + h / 2, target.x, target.y);
+    if (is_ordered() && d < w)
     {
-        set_target(-1, -1); // stop searching
-        set_go_back(x, y); // send signal to come back
+        set_ordered(false);
+        set_go_back(x, y); // ask for back signal
         return;
     }
     if (is_going_back() && d <= radius)
     {
-        set_go_back(-1, -1); // stop going back
-        angle = acos((x - target.x) / radius) * 180 / 3.14;
+        angle = atan2(y - target.y, x - target.x) * 180
+            / 3.14159; // synchro to circle around the shepherd
+        inc *= rand() % 2 ? 1 : -1;
+        set_go_back(-1, -1); // stop back signal
+        target.x = -1; // reset target
         return;
     }
     if (is_ordered() || is_going_back())
@@ -75,7 +80,7 @@ void dog::move()
         get_speed(&speed);
         int speed_x = ((target.x - x) * speed) / d;
         int speed_y = ((target.y - y) * speed) / d;
-        set_flip((speed_x < 0) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+        set_flip((speed_x > 0) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
         set_xy(x + speed_x, y + speed_y, true);
     }
 }

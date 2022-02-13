@@ -285,6 +285,7 @@ private:
     int speed;
     int x_speed;
     int y_speed;
+    SDL_Point click;
     SDL_Point target;
     int dist;
     bool hunted;
@@ -300,12 +301,13 @@ public:
     // getters
     void get_speed(int *speed);
     void get_xy_speed(int *x, int *y);
-    void get_target(SDL_Point *target);
     int get_dist();
     bool is_hunted();
     bool is_choosen();
     bool is_ordered();
     bool is_going_back();
+    void get_click(int *x, int *y);
+    void get_target(int *x, int *y);
 
     // setters
     void set_speed(int speed);
@@ -313,8 +315,10 @@ public:
     void set_dist(int dist);
     void set_hunted(bool hunted);
     void set_choosen(bool choosen);
-    void set_target(int x, int y);
+    void set_ordered(bool ordered);
     void set_go_back(int x, int y);
+    void set_click(int x, int y);
+    void set_target(int x, int y);
     virtual void move(){};
     virtual std::shared_ptr<moving_object> bear(SDL_Renderer *renderer)
     {
