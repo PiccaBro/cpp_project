@@ -5,13 +5,17 @@
 
 int main(int argc, char *argv[])
 {
-    std::cout << "Starting up the application" << std::endl;
-
     if (argc != 5)
-        throw std::runtime_error("Need three arguments - "
-                                 "number of sheep, number of wolves, "
-                                 "simulation time\n");
-
+    {
+        fprintf(stderr, "Usage : ./SDL_part1 n_sheep n_wolf n_dog time\n");
+        fprintf(stderr, "\nParameters :\n");
+        fprintf(stderr, "\tn_sheep\t : The number of sheep\n");
+        fprintf(stderr, "\tn_wolf\t : The number of wolf\n");
+        fprintf(stderr, "\tn_dog\t : The number of dog\n");
+        fprintf(stderr, "\ttime\t : duration of the game (in seconds)\n");
+        return 1;
+    }
+    std::cout << "Starting up the application" << std::endl;
     init();
 
     std::cout << "Done with initilization" << std::endl;

@@ -1,11 +1,11 @@
 #include "../application.h"
 
-/*
-  +=====================================================+
-  |                       SHEPHERD                      |
-  +=====================================================+
-*/
-
+/**
+ * @brief Construct a new shepherd
+ *
+ * @param file the path to texture
+ * @param renderer the renderer of the window
+ */
 shepherd::shepherd(const std::string &file, SDL_Renderer *renderer)
     : playable_character(file, renderer)
 {
@@ -22,6 +22,12 @@ shepherd::shepherd(const std::string &file, SDL_Renderer *renderer)
     setSex(false);
 }
 
+/**
+ * @brief interact only with dogs, give orders if click on them and call them
+ * back
+ *
+ * @param obj the object to interact with
+ */
 void shepherd::interact_with_object(std::shared_ptr<moving_object> obj)
 {
     if (obj->get_type() != DOG)
@@ -41,18 +47,18 @@ void shepherd::interact_with_object(std::shared_ptr<moving_object> obj)
     if (go_back) // is dog is going back
         obj->set_go_back(x + w / 2, y + h / 2); // send back signal
 
-    // if click on dog
+    // if click on dog's image
     if (click_x >= dog_x && click_x < dog_x + dog_w && click_y >= dog_y
         && click_y < dog_y + dog_h)
     {
-        obj->set_choosen(true);
+        obj->set_choosen(true); // make dog choosen
         set_click(-1, -1); // no target now
     }
     else if (choosen && click_x >= 0)
     {
         obj->set_choosen(false); // allow to be choosen again
         obj->set_ordered(true); // go to target
-        obj->set_go_back(-1, -1);
-        obj->set_click(click_x, click_y);
+        obj->set_go_back(-1, -1); // if dog was going back
+        obj->set_click(click_x, click_y); // set target
     }
 }

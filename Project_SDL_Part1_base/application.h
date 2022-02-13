@@ -67,6 +67,16 @@ namespace
     // Its purpose is to indicate to the compiler that everything
     // inside of it is UNIQUELY used within this source file.
 
+    /**
+     * @brief Calcul the distance between (x1, y1)
+     * and (x2, y2)
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return int
+     */
     int distance(int x1, int y1, int x2, int y2)
     {
         int dist = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
@@ -162,85 +172,25 @@ public:
     ~interacting_object(){};
 
     virtual void interact_with_object(std::shared_ptr<moving_object> obj){};
-    int getStamina()
-    {
-        return this->stamina;
-    }
-    int getMaxStamina()
-    {
-        return this->max_stamina;
-    }
-    void setMaxStamina(int max)
-    {
-        this->max_stamina = max;
-    }
-    void setStamina(int stamina, bool random)
-    {
-        if (!(random && rand() % 6))
-            this->stamina = stamina;
-    }
-
-    bool getSex()
-    {
-        return this->sex;
-    }
-
-    void setSex(bool sex)
-    {
-        this->sex = sex;
-    }
-
-    bool getBirth()
-    {
-        return this->give_birth;
-    }
-
-    void setBirth(bool give_birth)
-    {
-        this->give_birth = give_birth;
-    }
-
-    bool isAlive()
-    {
-        return this->alive;
-    }
-
-    void setAlive(bool alive)
-    {
-        this->alive = alive;
-    }
-
-    bool isPrey()
-    {
-        return this->prey;
-    }
-
-    void setPrey(bool prey)
-    {
-        this->prey = prey;
-    }
-
-    bool isPredator()
-    {
-        return this->predator;
-    }
-
-    void setPredator(bool predator)
-    {
-        this->predator = predator;
-    }
-
     // getters
-    enum animal_type get_type()
-    {
-        return a_type;
-    }
+    int getStamina();
+    int getMaxStamina();
+    bool getSex();
+    bool getBirth();
+    bool isAlive();
+    bool isPrey();
+    bool isPredator();
+    enum animal_type get_type();
 
     // setters
-    void set_type(enum animal_type type)
-    {
-        a_type = type;
-    }
+    void setBirth(bool give_birth);
+    void setSex(bool sex);
+    void setAlive(bool alive);
+    void setPrey(bool prey);
+    void setPredator(bool predator);
+    void set_type(enum animal_type type);
+    void setStamina(int stamina, bool random);
+    void setMaxStamina(int max);
 };
 
 /*
@@ -261,7 +211,7 @@ private:
 public:
     rendered_object(const std::string &file_path, SDL_Renderer *renderer);
     ~rendered_object();
-    void draw(); // draw the rendered_object on the screen <-> surface_win.
+    void draw();
 
     // getters
     void get_xy(int *x, int *y);

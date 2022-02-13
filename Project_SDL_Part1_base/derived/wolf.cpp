@@ -1,11 +1,11 @@
 #include "../application.h"
 
-/*
-  +=====================================================+
-  |                         WOLF                        |
-  +=====================================================+
-*/
-
+/**
+ * @brief Construct a new wolf
+ *
+ * @param file path to the texture
+ * @param renderer renderer of the window
+ */
 wolf::wolf(const std::string &file, SDL_Renderer *renderer)
     : animal(file, renderer)
 {
@@ -21,6 +21,10 @@ wolf::wolf(const std::string &file, SDL_Renderer *renderer)
     setPredator(true);
 }
 
+/**
+ * @brief Move the wolf
+ *
+ */
 void wolf::move()
 {
     int x, y, speed_x, speed_y;
@@ -37,6 +41,11 @@ void wolf::move()
         setAlive(false);
 }
 
+/**
+ * @brief Interact with the object
+ *
+ * @param obj the object
+ */
 void wolf::interact_with_object(std::shared_ptr<moving_object> obj)
 {
     int x, y, target_x, target_y, speed_x, speed_y, speed;

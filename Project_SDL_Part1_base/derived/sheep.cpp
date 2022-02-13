@@ -1,11 +1,11 @@
 #include "../application.h"
 
-/*
-  +=====================================================+
-  |                        SHEEP                        |
-  +=====================================================+
-*/
-
+/**
+ * @brief Construct a new sheep
+ *
+ * @param file path to the texture
+ * @param renderer renderer of the window
+ */
 sheep::sheep(const std::string &file, SDL_Renderer *renderer)
     : animal(file, renderer)
 {
@@ -22,10 +22,13 @@ sheep::sheep(const std::string &file, SDL_Renderer *renderer)
     set_speed(speed);
     boost = 1.25;
     set_hunted(false);
-    int speed_x = (rand() % speed) * ((rand() % 2) ? -1 : 1);
-    set_xy_speed(speed_x,
-                 sqrt(pow(speed, 2) - pow(speed_x, 2))
-                     * ((rand() % 2) ? -1 : 1));
+    int speed_x =
+        (rand() % speed) * ((rand() % 2) ? -1 : 1); // Random speed_x component
+    set_xy_speed(
+        speed_x,
+        sqrt(pow(speed, 2) - pow(speed_x, 2))
+            * ((rand() % 2) ? -1 : 1)); // Depending on speed_x and total speed,
+                                        // deduce the speed_y component
 }
 
 void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
@@ -47,14 +50,20 @@ void sheep::interact_with_object(std::shared_ptr<moving_object> obj)
         }
         return;
     }
+    // Can bear
     if (!is_hunted() && getSex() && !obj->getSex()
         && get_type() == obj->get_type() && getStamina() == getMaxStamina()
         && distance(x, y, hunt_x, hunt_y) < 30)
     {
-        setStamina(0, false);
-        setBirth(true);
+        setStamina(0, false); // Can't bear until stamina is not maximum
+        setBirth(true); // Bear an offspring
     }
 }
+
+/**
+ * @brief move the sheep
+ *
+ */
 void sheep::move()
 {
     bool bound_x, bound_y, hunted = is_hunted();
@@ -90,6 +99,12 @@ void sheep::move()
     }
 }
 
+/**
+ * @brief Bear a new offspring
+ *
+ * @param renderer renderer of the window
+ * @return std::shared_ptr<moving_object>
+ */
 std::shared_ptr<moving_object> sheep::bear(SDL_Renderer *renderer)
 {
     std::shared_ptr<moving_object> new_s =

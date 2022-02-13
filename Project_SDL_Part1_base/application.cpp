@@ -1,21 +1,17 @@
 ﻿#include "application.h"
 
 using namespace std;
-/*
-  +=====================================================+
-  |                  INITIALISATION                     |
-  +=====================================================+
-*/
 
+/**
+ * @brief The init function
+ *
+ */
 void init()
 {
-    // srand (time(NULL));
-    // Initialize SDL
     int status = SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO);
     if (status < 0)
         throw std::runtime_error("init():" + std::string(SDL_GetError()));
 
-    // Initialize PNG loading
     int imgFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags))
         throw std::runtime_error("init(): SDL_image could not initialize! "
@@ -23,12 +19,12 @@ void init()
                                  + std::string(IMG_GetError()));
 }
 
-/*
-  +=====================================================+
-  |                    APPLICATION                      |
-  +=====================================================+
-*/
-
+/**
+ * @brief Construct a new application
+ *
+ * @param argc the number of argument
+ * @param argv the arguments
+ */
 application::application(int argc, char *argv[])
 {
     // create the application window
@@ -72,6 +68,11 @@ application::application(int argc, char *argv[])
     quit = loop(std::stoul(argv[argc - 1]) * 1000);
 }
 
+/**
+ * @brief Destroy the application, its renderer, the score texture and the
+ * window
+ *
+ */
 application::~application()
 {
     SDL_DestroyTexture(score_texture);
@@ -79,11 +80,17 @@ application::~application()
     SDL_DestroyWindow(window);
 }
 
+/**
+ * @brief The main loop
+ *
+ * @param period time of the game
+ * @return int
+ */
 int application::loop(unsigned period)
 {
     unsigned int lastTime = 0, currentTime;
     quit = 0;
-    // loop
+
     while (!quit)
     {
         currentTime = SDL_GetTicks();
