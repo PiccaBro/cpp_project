@@ -10,6 +10,7 @@ void playable_character::move()
     int x, y, speed_x, speed_y, click_x, click_y;
     get_xy(&x, &y);
     get_xy_speed(&speed_x, &speed_y);
+    const Uint8 *kb_states = SDL_GetKeyboardState(NULL);
 
     // Check for actions
     while (SDL_PollEvent(&event))
@@ -33,33 +34,26 @@ void playable_character::move()
                 y = frame_height - frame_boundary;
             set_click(click_x,
                       click_y); // recorded and make coordinates between bounds
-            continue;
         }
-        // If button down of keyboard
-        if (event.type != SDL_KEYDOWN)
-            continue;
-        switch (event.key.keysym.sym)
+        bool left = (kb_states[SDL_SCANCODE_A] || kb_states[SDL_SCANCODE_LEFT]);
+        bool right =
+            (kb_states[SDL_SCANCODE_D] || kb_states[SDL_SCANCODE_RIGHT]);
+        bool up = (kb_states[SDL_SCANCODE_W] || kb_states[SDL_SCANCODE_UP]);
+        bool down = (kb_states[SDL_SCANCODE_S] || kb_states[SDL_SCANCODE_DOWN]);
+        if (left && !right)
         {
-        case SDLK_q: // Q button
-        case SDLK_LEFT: // Left arrow
             set_flip(SDL_FLIP_NONE);
-            set_xy(x - speed_x, y, true);
-            break;
-        case SDLK_d: // D button
-        case SDLK_RIGHT: // Right arrow
-            set_flip(SDL_FLIP_HORIZONTAL);
-            set_xy(x + speed_x, y, true);
-            break;
-        case SDLK_z: // Z button
-        case SDLK_UP: // Up arrow
-            set_xy(x, y - speed_y, true);
-            break;
-        case SDLK_s: // S button
-        case SDLK_DOWN: // Down arrow
-            set_xy(x, y + speed_y, true);
-            break;
-        default:
-            break;
+            x -= speed_x;
         }
+        else if (right && !left)
+        {
+            set_flip(SDL_FLIP_HORIZONTAL);
+            x += speed_x;
+        }
+        if (up && !down)
+            y -= speed_y;
+        else if (down && !up)
+            y += speed_y;
+        set_xy(x, y, true);
     }
 }

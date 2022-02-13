@@ -10,7 +10,7 @@ shepherd::shepherd(const std::string &file, SDL_Renderer *renderer)
     : playable_character(file, renderer)
 {
     set_rect(128, 128, false);
-    set_xy_speed(7, 7);
+    set_xy_speed(5, 5);
     set_click(-1, -1);
     set_type(SHEPHERD);
     setAlive(true);
