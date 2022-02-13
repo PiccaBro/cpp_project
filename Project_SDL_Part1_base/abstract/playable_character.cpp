@@ -7,7 +7,7 @@
 void playable_character::move()
 {
     SDL_Event event;
-    int x, y, speed_x, speed_y;
+    int x, y, speed_x, speed_y, click_x, click_y;
     get_xy(&x, &y);
     get_xy_speed(&speed_x, &speed_y);
 
@@ -21,7 +21,8 @@ void playable_character::move()
         if (event.type == SDL_MOUSEBUTTONDOWN
             && event.button.button == SDL_BUTTON_LEFT)
         {
-            SDL_GetMouseState(&x, &y); // get coordinates of the click
+            SDL_GetMouseState(&click_x,
+                              &click_y); // get coordinates of the click
             if (x < frame_boundary)
                 x = frame_boundary;
             if (x > frame_width - frame_boundary)
@@ -30,7 +31,8 @@ void playable_character::move()
                 y = frame_boundary;
             if (y > frame_height - frame_boundary)
                 y = frame_height - frame_boundary;
-            set_click(x, y); // recorded and make coordinates between bounds
+            set_click(click_x,
+                      click_y); // recorded and make coordinates between bounds
             continue;
         }
         // If button down of keyboard
