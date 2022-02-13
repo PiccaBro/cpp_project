@@ -15,6 +15,14 @@ void playable_character::move()
             && event.button.button == SDL_BUTTON_LEFT)
         {
             SDL_GetMouseState(&x, &y);
+            if (x < frame_boundary)
+                x = frame_boundary;
+            if (x > frame_width - frame_boundary)
+                x = frame_width - frame_boundary;
+            if (y < frame_boundary)
+                y = frame_boundary;
+            if (y > frame_height - frame_boundary)
+                y = frame_height - frame_boundary;
             set_click(x, y);
             continue;
         }
